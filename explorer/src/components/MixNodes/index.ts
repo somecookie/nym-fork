@@ -38,6 +38,6 @@ export function mixNodeResponseItemToMixnodeRowType(item: MixNodeResponseItem): 
     layer: item?.layer || '',
     profit_percentage: `${profit_percentage}%`,
     delegators_number: undefined,
-    avg_uptime: undefined
+    avg_uptime: item?.avg_uptime
   };
 }
