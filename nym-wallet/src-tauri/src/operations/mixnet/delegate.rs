@@ -101,6 +101,10 @@ pub async fn get_delegation_summary(
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<DelegationsSummaryResponse, BackendError> {
   let address = nymd_client!(state).address().to_string();
+  let vesting_contract_address: Option<String> = nymd_client!(state)
+    .vesting_contract_address()
+    .ok()
+    .map(|v| v.to_string());
 
   let delegations = get_all_mix_delegations(state.clone()).await?;
   let mut total_delegations = Coin::new(0u128, &Denom::Minor);
@@ -108,7 +112,13 @@ pub async fn get_delegation_summary(
 
   for d in delegations.clone() {
     total_delegations = total_delegations + d.amount.into();
-    let reward = get_delegator_rewards(address.to_string(), d.node_identity, state.clone()).await?;
+    let reward = get_delegator_rewards(
+      address.to_string(),
+      d.node_identity,
+      vesting_contract_address.clone(),
+      state.clone(),
+    )
+    .await?;
     total_rewards = total_rewards + Coin::minor(reward);
   }
 
