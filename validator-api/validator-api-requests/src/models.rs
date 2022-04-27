@@ -10,7 +10,10 @@ use std::fmt;
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[cfg_attr(
     test,
-    ts(export, export_to = "../../nym-wallet/src/types/rust/mixnodestatus.ts")
+    ts(
+        export,
+        export_to = "../../ts-packages/types/src/types/rust/MixnodeStatus.ts"
+    )
 )]
 #[serde(rename_all = "snake_case")]
 pub enum MixnodeStatus {
@@ -32,7 +35,7 @@ impl MixnodeStatus {
     test,
     ts(
         export,
-        export_to = "../../nym-wallet/src/types/rust/corenodestatusresponse.ts"
+        export_to = "../../ts-packages/types/src/types/rust/CoreNodeStatusResponse.ts"
     )
 )]
 pub struct CoreNodeStatusResponse {
@@ -46,7 +49,7 @@ pub struct CoreNodeStatusResponse {
     test,
     ts(
         export,
-        export_to = "../../nym-wallet/src/types/rust/mixnodestatusresponse.ts"
+        export_to = "../../ts-packages/types/src/types/rust/MixnodeStatusResponse.ts"
     )
 )]
 pub struct MixnodeStatusResponse {
@@ -75,7 +78,7 @@ pub struct UptimeResponse {
     test,
     ts(
         export,
-        export_to = "../../nym-wallet/src/types/rust/stakesaturationresponse.ts"
+        export_to = "../../ts-packages/types/src/types/rust/StakeSaturationResponse.ts"
     )
 )]
 pub struct StakeSaturationResponse {
@@ -89,7 +92,7 @@ pub struct StakeSaturationResponse {
     test,
     ts(
         export,
-        export_to = "../../nym-wallet/src/types/rust/selectionchance.ts"
+        export_to = "../../ts-packages/types/src/types/rust/SelectionChance.ts"
     )
 )]
 pub enum SelectionChance {
@@ -130,7 +133,7 @@ impl fmt::Display for SelectionChance {
     test,
     ts(
         export,
-        export_to = "../../nym-wallet/src/types/rust/inclusionprobabilityresponse.ts"
+        export_to = "../../ts-packages/types/src/types/rust/InclusionProbabilityResponse.ts"
     )
 )]
 pub struct InclusionProbabilityResponse {

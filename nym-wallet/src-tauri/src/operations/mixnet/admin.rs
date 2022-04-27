@@ -9,7 +9,13 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/stateparams.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/StateParams.ts"
+  )
+)]
 #[derive(Serialize, Deserialize)]
 pub struct TauriContractStateParams {
   minimum_mixnode_pledge: String,

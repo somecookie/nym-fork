@@ -12,7 +12,10 @@ use tokio::sync::RwLock;
 
 #[allow(non_snake_case)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/appEnv.ts"))]
+#[cfg_attr(
+  test,
+  ts(export, export_to = "../../ts-packages/types/src/types/rust/AppEnv.ts")
+)]
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 pub struct AppEnv {
   pub ADMIN_ADDRESS: Option<String>,
@@ -86,7 +89,13 @@ pub async fn outdated_get_approximate_fee(
 }
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/delegationresult.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/DelegationResult.ts"
+  )
+)]
 #[derive(Serialize, Deserialize)]
 pub struct DelegationResult {
   source_address: String,
@@ -115,7 +124,13 @@ impl From<Delegation> for DelegationResult {
 }
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/delegationevent.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/DelegationEvent.ts"
+  )
+)]
 #[derive(Deserialize, Serialize)]
 pub enum DelegationEvent {
   Delegate(DelegationResult),
@@ -134,7 +149,13 @@ impl From<ContractDelegationEvent> for DelegationEvent {
 }
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/pendingundelegate.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/PendingUndelegate.ts"
+  )
+)]
 #[derive(Deserialize, Serialize)]
 pub struct PendingUndelegate {
   mix_identity: String,

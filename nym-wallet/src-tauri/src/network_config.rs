@@ -11,14 +11,23 @@ use tokio::sync::RwLock;
 
 // When the UI queries validator urls we use this type
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/validatorurls.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/ValidatorUrls.ts"
+  )
+)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ValidatorUrls {
   pub urls: Vec<ValidatorUrl>,
 }
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/validatorurl.ts"))]
+#[cfg_attr(
+  test,
+  ts(export, export_to = "../../ts-packages/types/rust/validatorurl.ts")
+)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ValidatorUrl {
   pub url: String,
@@ -28,7 +37,10 @@ pub struct ValidatorUrl {
 // The type used when adding or removing validators, effectively the input.
 // NOTE: we should consider if we want to split this up
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/validatorurls.ts"))]
+#[cfg_attr(
+  test,
+  ts(export, export_to = "../../ts-packages/types/rust/validatorurls.ts")
+)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Validator {
   pub nymd_url: String,

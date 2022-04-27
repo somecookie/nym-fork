@@ -7,7 +7,10 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/epoch.ts"))]
+#[cfg_attr(
+  test,
+  ts(export, export_to = "../../ts-packages/types/src/types/rust/Epoch.ts")
+)]
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Epoch {
   id: u32,

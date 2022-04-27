@@ -25,7 +25,13 @@ use url::Url;
 use validator_client::{nymd::SigningNymdClient, Client};
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/account.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/Account.ts"
+  )
+)]
 #[derive(Serialize, Deserialize)]
 pub struct Account {
   contract_address: String,
@@ -44,7 +50,13 @@ impl Account {
 }
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/createdaccount.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/CreatedAccount.ts"
+  )
+)]
 #[derive(Serialize, Deserialize)]
 pub struct CreatedAccount {
   account: Account,
@@ -52,7 +64,13 @@ pub struct CreatedAccount {
 }
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/balance.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/Balance.ts"
+  )
+)]
 #[derive(Serialize, Deserialize)]
 pub struct Balance {
   coin: Coin,

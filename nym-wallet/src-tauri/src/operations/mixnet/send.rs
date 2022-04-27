@@ -9,7 +9,13 @@ use tokio::sync::RwLock;
 use validator_client::nymd::{AccountId, CosmosCoin, TxResponse};
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/tauritxresult.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/TauriTxResult.ts"
+  )
+)]
 #[derive(Deserialize, Serialize)]
 pub struct TauriTxResult {
   block_height: u64,
@@ -23,7 +29,10 @@ pub struct TauriTxResult {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[cfg_attr(
   test,
-  ts(export, export_to = "../src/types/rust/transactiondetails.ts")
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/TransactionDetails.ts"
+  )
 )]
 #[derive(Deserialize, Serialize)]
 pub struct TransactionDetails {

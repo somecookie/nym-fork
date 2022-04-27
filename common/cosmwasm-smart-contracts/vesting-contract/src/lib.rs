@@ -15,7 +15,10 @@ pub fn one_ucoin() -> Coin {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[cfg_attr(
     test,
-    ts(export, export_to = "../../../nym-wallet/src/types/rust/period.ts")
+    ts(
+        export,
+        export_to = "../../../ts-packages/types/src/types/rust/Period.ts"
+    )
 )]
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, JsonSchema)]
 pub enum Period {

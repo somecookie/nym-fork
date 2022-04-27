@@ -19,7 +19,7 @@ use std::fmt::Display;
     test,
     ts(
         export,
-        export_to = "../../../nym-wallet/src/types/rust/rewardedsetnodestatus.ts"
+        export_to = "../../../ts-packages/types/src/types/rust/RewardedSetNodeStatus.ts"
     )
 )]
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, JsonSchema, PartialEq)]
@@ -112,7 +112,10 @@ impl PendingUndelegate {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[cfg_attr(
     test,
-    ts(export, export_to = "../../../nym-wallet/src/types/rust/mixnode.ts")
+    ts(
+        export,
+        export_to = "../../../ts-packages/types/src/types/rust/Mixnode.ts"
+    )
 )]
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize, JsonSchema)]
 pub struct MixNode {

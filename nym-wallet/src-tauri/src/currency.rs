@@ -3,7 +3,11 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[cfg_attr(
   test,
-  ts(export, export, export_to = "../src/types/rust/currencyDenom.ts")
+  ts(
+    export,
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/CurrencyDenom.ts"
+  )
 )]
 #[cfg_attr(test, ts(rename_all = "UPPERCASE"))]
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -21,18 +25,23 @@ pub enum CurrencyDenom {
   ts(
     export,
     export,
-    export_to = "../src/types/rust/currencyStringMajorAmount.ts"
+    export_to = "../../ts-packages/types/src/types/rust/CurrencyStringMajorAmount.ts"
   )
 )]
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct StringMajorAmount(String);
-
-// see https://github.com/Aleph-Alpha/ts-rs/issues/51 for exporting type aliases
+pub struct StringMajorAmount(String); // see https://github.com/Aleph-Alpha/ts-rs/issues/51 for exporting type aliases
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export, export_to = "../src/types/rust/currency.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/Currency.ts"
+  )
+)]
 #[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct MajorCurrency {
+pub struct MajorCurrencyAmount {
   pub amount: StringMajorAmount,
   pub denom: CurrencyDenom,
 }

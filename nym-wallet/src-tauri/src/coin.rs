@@ -14,7 +14,14 @@ use strum::IntoEnumIterator;
 use validator_client::nymd::{CosmosCoin, GasPrice};
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export, export_to = "../src/types/rust/denom.ts"))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/Denom.ts"
+  )
+)]
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 pub enum Denom {
   Major,
@@ -49,7 +56,10 @@ impl TryFrom<CosmosDenom> for Denom {
 }
 
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(test, ts(export, export_to = "../src/types/rust/coin.ts"))]
+#[cfg_attr(
+  test,
+  ts(export, export_to = "../../ts-packages/types/src/types/rust/Coin.ts")
+)]
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 pub struct Coin {
   amount: String,
