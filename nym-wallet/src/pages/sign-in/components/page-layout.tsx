@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, Box } from '@mui/material';
-import { NymWordmark } from '@nymproject/react';
+import { NymWordmark } from '@nymproject/react/logo/NymWordmark';
 import { Step } from './step';
 
 export const PageLayout: React.FC = ({ children }) => (

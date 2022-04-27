@@ -9,8 +9,8 @@ export const useSettingsState = (shouldUpdate: boolean) => {
   const [saturation, setSaturation] = useState<number>(0);
   const [rewardEstimation, setRewardEstimation] = useState<number>(0);
   const [inclusionProbability, setInclusionProbability] = useState<InclusionProbabilityResponse>({
-    in_active: 'Low',
-    in_reserve: 'Low',
+    in_active: 'VeryLow',
+    in_reserve: 'VeryLow',
   });
 
   const { mixnodeDetails } = useContext(ClientContext);
@@ -43,7 +43,7 @@ export const useSettingsState = (shouldUpdate: boolean) => {
     setStatus('not_found');
     setSaturation(0);
     setRewardEstimation(0);
-    setInclusionProbability({ in_active: 'Low', in_reserve: 'Low' });
+    setInclusionProbability({ in_active: 'VeryLow', in_reserve: 'VeryLow' });
   };
 
   useEffect(() => {

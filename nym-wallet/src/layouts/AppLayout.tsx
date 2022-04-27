@@ -1,5 +1,5 @@
 import React from 'react';
-import { NymWordmark } from '@nymproject/react';
+import { NymWordmark } from '@nymproject/react/logo/NymWordmark';
 import { Box, Container } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { AppBar, Nav } from '../components';

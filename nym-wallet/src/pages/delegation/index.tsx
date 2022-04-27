@@ -54,7 +54,7 @@ export const DelegationPage: FC = () => {
     }
   };
 
-  const handleNewDelegation = async (identityKey?: string, amount?: string) => {
+  const handleNewDelegation = async (identityKey?: string, amount?: number) => {
     if (!identityKey || !amount) {
       setConfirmationModalProps({
         status: 'error',
@@ -97,7 +97,7 @@ export const DelegationPage: FC = () => {
     }
   };
 
-  const handleDelegateMore = async (identityKey?: string, amount?: string) => {
+  const handleDelegateMore = async (identityKey?: string, amount?: number) => {
     if (!identityKey || !amount || currentDelegationListActionItem?.id !== identityKey) {
       setConfirmationModalProps({
         status: 'error',
@@ -277,7 +277,6 @@ export const DelegationPage: FC = () => {
           onOk={handleUndelegate}
           currency="NYM"
           fee={0.004375}
-          minimum={5}
           amount={150}
           identityKey={currentDelegationListActionItem.id}
         />

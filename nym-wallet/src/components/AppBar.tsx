@@ -5,7 +5,7 @@ import TerminalIcon from '@mui/icons-material/Terminal';
 import { ClientContext } from '../context/main';
 import { NetworkSelector } from './NetworkSelector';
 import { Node as NodeIcon } from '../svg-icons/node';
-import { config } from '../../config';
+import { config } from '../config';
 
 export const AppBar = () => {
   const { showSettings, logOut, handleShowSettings, handleShowTerminal, appEnv } = useContext(ClientContext);
