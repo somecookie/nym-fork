@@ -70,6 +70,8 @@ pub enum BackendError {
   #[error("No balance available for address {0}")]
   NoBalance(String),
   #[error("{0} is not a valid denomination string")]
+  InvalidAmount(String),
+  #[error("{0} is not a valid amount string")]
   InvalidDenom(String),
   #[error("{0} is not a valid network denomination string")]
   InvalidNetworkDenom(String),
