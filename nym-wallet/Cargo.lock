@@ -2945,6 +2945,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "nym-types"
+version = "1.0.0"
+dependencies = [
+ "coconut-interface",
+ "config",
+ "cosmrs",
+ "cosmwasm-std",
+ "eyre",
+ "itertools",
+ "mixnet-contract-common",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "strum 0.23.0",
+ "thiserror",
+ "url",
+ "validator-client",
+ "vesting-contract",
+ "vesting-contract-common",
+]
+
+[[package]]
 name = "nym_wallet"
 version = "1.0.4"
 dependencies = [
@@ -2966,6 +2988,7 @@ dependencies = [
  "log",
  "mixnet-contract-common",
  "once_cell",
+ "nym-types",
  "pretty_env_logger",
  "rand 0.6.5",
  "reqwest",

@@ -11,7 +11,6 @@ use validator_client::nymd::fee::helpers::Operation;
 
 mod coin;
 mod config;
-mod currency;
 mod error;
 mod menu;
 mod network;

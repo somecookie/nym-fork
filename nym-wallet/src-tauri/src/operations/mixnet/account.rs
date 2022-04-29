@@ -1,4 +1,3 @@
-use crate::coin::{Coin, Denom};
 use crate::config::{Config, CUSTOM_SIMULATED_GAS_MULTIPLIER};
 use crate::error::BackendError;
 use crate::network::Network as WalletNetwork;
@@ -6,6 +5,7 @@ use crate::network_config;
 use crate::nymd_client;
 use crate::state::State;
 use crate::wallet_storage::{self, DEFAULT_WALLET_ACCOUNT_ID};
+use nym_types::currency::{CurrencyDenom, MajorCurrencyAmount};
 
 use bip39::{Language, Mnemonic};
 use config::defaults::all::Network;
@@ -36,11 +36,11 @@ use validator_client::{nymd::SigningNymdClient, Client};
 pub struct Account {
   contract_address: String,
   client_address: String,
-  denom: Denom,
+  denom: CurrencyDenom,
 }
 
 impl Account {
-  pub fn new(contract_address: String, client_address: String, denom: Denom) -> Self {
+  pub fn new(contract_address: String, client_address: String, denom: CurrencyDenom) -> Self {
     Account {
       contract_address,
       client_address,
@@ -73,7 +73,7 @@ pub struct CreatedAccount {
 )]
 #[derive(Serialize, Deserialize)]
 pub struct Balance {
-  coin: Coin,
+  coin: MajorCurrencyAmount,
   printable_balance: String,
 }
 
@@ -92,17 +92,15 @@ pub async fn get_balance(
 ) -> Result<Balance, BackendError> {
   let denom = state.read().await.current_network().denom();
   match nymd_client!(state)
-    .get_balance(nymd_client!(state).address(), denom.clone())
+    .get_balance(nymd_client!(state).address(), denom)
     .await
   {
     Ok(Some(coin)) => {
-      let coin = Coin::new(
-        &coin.amount.to_string(),
-        &Denom::from_str(&coin.denom.to_string())?,
-      );
+      let coin = MajorCurrencyAmount::from_cosmrs_coin(&coin)?;
+      let printable_balance = coin.to_string();
       Ok(Balance {
-        coin: coin.clone(),
-        printable_balance: format!("{} {}", coin.to_major().amount(), &denom.as_ref()[1..]),
+        coin,
+        printable_balance,
       })
     }
     Ok(None) => Err(BackendError::NoBalance(
