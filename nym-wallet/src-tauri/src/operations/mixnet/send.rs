@@ -1,7 +1,7 @@
-use crate::coin::Coin;
 use crate::error::BackendError;
 use crate::nymd_client;
 use crate::state::State;
+use nym_types::currency::MajorCurrencyAmount;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::sync::Arc;
@@ -36,7 +36,7 @@ pub struct TauriTxResult {
 )]
 #[derive(Deserialize, Serialize)]
 pub struct TransactionDetails {
-  amount: Coin,
+  amount: MajorCurrencyAmount,
   from_address: String,
   to_address: String,
 }
@@ -57,13 +57,12 @@ impl TauriTxResult {
 #[tauri::command]
 pub async fn send(
   address: &str,
-  amount: Coin,
+  amount: MajorCurrencyAmount,
   memo: String,
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<TauriTxResult, BackendError> {
   let address = AccountId::from_str(address)?;
-  let network_denom = state.read().await.current_network().denom();
-  let cosmos_amount: CosmosCoin = amount.clone().into_cosmos_coin(&network_denom)?;
+  let cosmos_amount: CosmosCoin = amount.clone().into_cosmos_coin()?;
   let result = nymd_client!(state)
     .send(&address, vec![cosmos_amount], memo)
     .await?;

@@ -1,22 +1,21 @@
-use crate::coin::Coin;
 use crate::error::BackendError;
 use crate::nymd_client;
 use crate::state::State;
 use crate::{Gateway, MixNode};
-use cosmwasm_std::Uint128;
-use mixnet_contract_common::{GatewayBond, MixNodeBond};
+use nym_types::currency::MajorCurrencyAmount;
+use nym_types::gateway::GatewayBond;
+use nym_types::mixnode::MixNodeBond;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
 #[tauri::command]
 pub async fn bond_gateway(
   gateway: Gateway,
-  pledge: Coin,
+  pledge: MajorCurrencyAmount,
   owner_signature: String,
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<(), BackendError> {
-  let denom = state.read().await.current_network().denom();
-  let pledge = pledge.into_cosmwasm_coin(&denom)?;
+  let pledge = pledge.into_cosmwasm_coin()?;
   nymd_client!(state)
     .bond_gateway(gateway, owner_signature, pledge)
     .await?;
@@ -43,11 +42,10 @@ pub async fn unbond_mixnode(
 pub async fn bond_mixnode(
   mixnode: MixNode,
   owner_signature: String,
-  pledge: Coin,
+  pledge: MajorCurrencyAmount,
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<(), BackendError> {
-  let denom = state.read().await.current_network().denom();
-  let pledge = pledge.into_cosmwasm_coin(&denom)?;
+  let pledge = pledge.into_cosmwasm_coin()?;
   nymd_client!(state)
     .bond_mixnode(mixnode, owner_signature, pledge)
     .await?;
@@ -72,7 +70,8 @@ pub async fn mixnode_bond_details(
   let guard = state.read().await;
   let client = guard.current_client()?;
   let bond = client.nymd.owns_mixnode(client.nymd.address()).await?;
-  Ok(bond)
+  let res = MixNodeBond::from_mixnet_contract_mixnode_bond(bond)?;
+  Ok(res)
 }
 
 #[tauri::command]
@@ -82,13 +81,18 @@ pub async fn gateway_bond_details(
   let guard = state.read().await;
   let client = guard.current_client()?;
   let bond = client.nymd.owns_gateway(client.nymd.address()).await?;
-  Ok(bond)
+  let res = GatewayBond::from_mixnet_contract_gateway_bond(bond)?;
+  Ok(res)
 }
 
 #[tauri::command]
 pub async fn get_operator_rewards(
   address: String,
   state: tauri::State<'_, Arc<RwLock<State>>>,
-) -> Result<Uint128, BackendError> {
-  Ok(nymd_client!(state).get_operator_rewards(address).await?)
+) -> Result<MajorCurrencyAmount, BackendError> {
+  let denom = state.read().await.current_network().denom();
+  let rewards_as_minor = nymd_client!(state).get_operator_rewards(address).await?;
+  let amount: MajorCurrencyAmount =
+    MajorCurrencyAmount::from_minor_uint128_and_denom(rewards_as_minor, &denom.to_string())?;
+  Ok(amount)
 }

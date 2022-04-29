@@ -3230,6 +3230,7 @@ dependencies = [
  "itertools",
  "mixnet-contract-common",
  "reqwest",
+ "schemars",
  "serde",
  "serde_json",
  "strum",

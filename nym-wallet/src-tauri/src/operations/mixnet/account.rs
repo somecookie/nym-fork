@@ -1,3 +1,22 @@
+use std::collections::HashMap;
+use std::convert::TryInto;
+use std::str::FromStr;
+use std::sync::Arc;
+
+use bip39::{Language, Mnemonic};
+use cosmrs::bip32::DerivationPath;
+use itertools::Itertools;
+use rand::seq::SliceRandom;
+use strum::IntoEnumIterator;
+use tokio::sync::RwLock;
+use url::Url;
+
+use config::defaults::all::Network;
+use config::defaults::COSMOS_DERIVATION_PATH;
+use nym_types::account::{Account, AccountWithMnemonic, Balance};
+use nym_types::currency::MajorCurrencyAmount;
+use validator_client::{nymd::SigningNymdClient, Client};
+
 use crate::config::{Config, CUSTOM_SIMULATED_GAS_MULTIPLIER};
 use crate::error::BackendError;
 use crate::network::Network as WalletNetwork;
@@ -5,77 +24,6 @@ use crate::network_config;
 use crate::nymd_client;
 use crate::state::State;
 use crate::wallet_storage::{self, DEFAULT_WALLET_ACCOUNT_ID};
-use nym_types::currency::{CurrencyDenom, MajorCurrencyAmount};
-
-use bip39::{Language, Mnemonic};
-use config::defaults::all::Network;
-use config::defaults::COSMOS_DERIVATION_PATH;
-use cosmrs::bip32::DerivationPath;
-use itertools::Itertools;
-use rand::seq::SliceRandom;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::convert::TryInto;
-use std::str::FromStr;
-use std::sync::Arc;
-use strum::IntoEnumIterator;
-use tokio::sync::RwLock;
-use url::Url;
-
-use validator_client::{nymd::SigningNymdClient, Client};
-
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(
-  test,
-  ts(
-    export,
-    export_to = "../../ts-packages/types/src/types/rust/Account.ts"
-  )
-)]
-#[derive(Serialize, Deserialize)]
-pub struct Account {
-  contract_address: String,
-  client_address: String,
-  denom: CurrencyDenom,
-}
-
-impl Account {
-  pub fn new(contract_address: String, client_address: String, denom: CurrencyDenom) -> Self {
-    Account {
-      contract_address,
-      client_address,
-      denom,
-    }
-  }
-}
-
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(
-  test,
-  ts(
-    export,
-    export_to = "../../ts-packages/types/src/types/rust/CreatedAccount.ts"
-  )
-)]
-#[derive(Serialize, Deserialize)]
-pub struct CreatedAccount {
-  account: Account,
-  mnemonic: String,
-}
-
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(
-  test,
-  ts(
-    export,
-    export_to = "../../ts-packages/types/src/types/rust/Balance.ts"
-  )
-)]
-#[derive(Serialize, Deserialize)]
-pub struct Balance {
-  coin: MajorCurrencyAmount,
-  printable_balance: String,
-}
 
 #[tauri::command]
 pub async fn connect_with_mnemonic(
@@ -96,10 +44,10 @@ pub async fn get_balance(
     .await
   {
     Ok(Some(coin)) => {
-      let coin = MajorCurrencyAmount::from_cosmrs_coin(&coin)?;
-      let printable_balance = coin.to_string();
+      let amount = MajorCurrencyAmount::from_cosmrs_coin(&coin)?;
+      let printable_balance = amount.to_string();
       Ok(Balance {
-        coin,
+        amount,
         printable_balance,
       })
     }
@@ -113,10 +61,10 @@ pub async fn get_balance(
 #[tauri::command]
 pub async fn create_new_account(
   state: tauri::State<'_, Arc<RwLock<State>>>,
-) -> Result<CreatedAccount, BackendError> {
+) -> Result<AccountWithMnemonic, BackendError> {
   let rand_mnemonic = random_mnemonic();
   let account = connect_with_mnemonic(rand_mnemonic.to_string(), state).await?;
-  Ok(CreatedAccount {
+  Ok(AccountWithMnemonic {
     account,
     mnemonic: rand_mnemonic.to_string(),
   })

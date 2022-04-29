@@ -1,60 +1,57 @@
-use crate::coin::{Coin, Denom};
 use crate::error::BackendError;
 use crate::nymd_client;
 use crate::state::State;
-use crate::utils::DelegationEvent;
 use crate::utils::DelegationResult;
+use crate::utils::{from_contract_delegation_events, DelegationEvent};
 use cosmwasm_std::{Coin as CosmWasmCoin, Uint128};
-use mixnet_contract_common::Delegation;
 use mixnet_contract_common::IdentityKey;
+use nym_types::currency::{CurrencyDenom, MajorCurrencyAmount};
+use nym_types::delegation::Delegation;
+use nym_types::error::TypesError;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
-// #[cfg_attr(test, derive(ts_rs::TS))]
-// #[cfg_attr(
-//   test,
-//   ts(
-//     export,
-//     export_to = "../../ts-packages/types/src/types/rust/DelegationSummaryResponse.ts"
-//   )
-// )]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(
+  test,
+  ts(
+    export,
+    export_to = "../../ts-packages/types/src/types/rust/DelegationSummaryResponse.ts"
+  )
+)]
 #[derive(Deserialize, Serialize)]
 pub struct DelegationsSummaryResponse {
   pub delegations: Vec<Delegation>,
-  pub total_delegations: Coin,
-  pub total_rewards: Coin,
+  pub total_delegations: MajorCurrencyAmount,
+  pub total_rewards: MajorCurrencyAmount,
 }
 
 #[tauri::command]
 pub async fn get_pending_delegation_events(
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<Vec<DelegationEvent>, BackendError> {
-  Ok(
-    nymd_client!(state)
-      .get_pending_delegation_events(nymd_client!(state).address().to_string(), None)
-      .await?
-      .into_iter()
-      .map(|delegation_event| delegation_event.into())
-      .collect::<Vec<DelegationEvent>>(),
-  )
+  let events = nymd_client!(state)
+    .get_pending_delegation_events(nymd_client!(state).address().to_string(), None)
+    .await?;
+
+  from_contract_delegation_events(events)
 }
 
 #[tauri::command]
 pub async fn delegate_to_mixnode(
   identity: &str,
-  amount: Coin,
+  amount: MajorCurrencyAmount,
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<DelegationResult, BackendError> {
-  let denom = state.read().await.current_network().denom();
-  let delegation: CosmWasmCoin = amount.into_cosmwasm_coin(&denom)?;
+  let delegation: CosmWasmCoin = amount.clone().into_cosmwasm_coin()?;
   nymd_client!(state)
     .delegate_to_mixnode(identity, &delegation)
     .await?;
   Ok(DelegationResult::new(
     nymd_client!(state).address().as_ref(),
     identity,
-    Some(delegation.into()),
+    Some(amount),
   ))
 }
 
@@ -77,12 +74,19 @@ pub async fn undelegate_from_mixnode(
 pub async fn get_all_mix_delegations(
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<Vec<Delegation>, BackendError> {
-  Ok(
-    nymd_client!(state)
-      .get_delegator_delegations_paged(nymd_client!(state).address().to_string(), None, None) // get all delegations, ignoring paging
-      .await?
-      .delegations,
-  )
+  let delegations = nymd_client!(state)
+    .get_delegator_delegations_paged(nymd_client!(state).address().to_string(), None, None) // get all delegations, ignoring paging
+    .await?
+    .delegations;
+
+  match delegations
+    .into_iter()
+    .map(|d| d.try_into())
+    .collect::<Result<Vec<Delegation>, TypesError>>()
+  {
+    Ok(res) => Ok(res),
+    Err(e) => Err(e.into()),
+  }
 }
 
 #[tauri::command]
@@ -109,12 +113,15 @@ pub async fn get_delegation_summary(
     .ok()
     .map(|v| v.to_string());
 
+  let denom_minor = state.read().await.current_network().denom();
+  let denom: CurrencyDenom = denom_minor.clone().try_into()?;
+
   let delegations = get_all_mix_delegations(state.clone()).await?;
-  let mut total_delegations = Coin::new(0u128, &Denom::Minor);
-  let mut total_rewards = Coin::new(0u128, &Denom::Minor);
+  let mut total_delegations = MajorCurrencyAmount::zero(&denom);
+  let mut total_rewards = MajorCurrencyAmount::zero(&denom);
 
   for d in delegations.clone() {
-    total_delegations = total_delegations + d.amount.into();
+    total_delegations = total_delegations + d.amount;
     let reward = get_delegator_rewards(
       address.to_string(),
       d.node_identity,
@@ -122,7 +129,8 @@ pub async fn get_delegation_summary(
       state.clone(),
     )
     .await?;
-    total_rewards = total_rewards + Coin::minor(reward);
+    total_rewards = total_rewards
+      + MajorCurrencyAmount::from_minor_uint128_and_denom(reward, denom_minor.as_ref())?;
   }
 
   Ok(DelegationsSummaryResponse {

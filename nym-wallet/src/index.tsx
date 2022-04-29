@@ -12,12 +12,16 @@ import { NymWalletTheme, WelcomeTheme } from './theme';
 import { maximizeWindow } from './utils';
 import { SignInProvider } from './pages/sign-in/context';
 import { Terminal } from './pages/terminal';
+import { config } from './config';
 
 const App = () => {
   const { clientDetails } = useContext(ClientContext);
 
   useEffect(() => {
-    maximizeWindow();
+    // do not maximise in dev mode, because it happens on hot reloading
+    if (!config.IS_DEV_MODE) {
+      maximizeWindow();
+    }
   }, []);
 
   return !clientDetails ? (

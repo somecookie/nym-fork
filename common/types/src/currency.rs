@@ -4,9 +4,11 @@ use cosmrs::Denom as CosmosDenom;
 use cosmwasm_std::Coin as CosmWasmCoin;
 use cosmwasm_std::{Decimal, Uint128};
 use itertools::Itertools;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
 use std::fmt::{Display, Formatter};
+use std::ops::Add;
 use std::str::FromStr;
 use strum::{Display, EnumString, EnumVariantNames};
 use validator_client::nymd::{CosmosCoin, GasPrice};
@@ -22,7 +24,15 @@ use validator_client::nymd::{CosmosCoin, GasPrice};
 )]
 #[cfg_attr(test, ts(rename_all = "UPPERCASE"))]
 #[derive(
-    Display, Serialize, Deserialize, Clone, Debug, EnumString, EnumVariantNames, PartialEq,
+    Display,
+    Serialize,
+    Deserialize,
+    Clone,
+    Debug,
+    EnumString,
+    EnumVariantNames,
+    PartialEq,
+    JsonSchema,
 )]
 #[serde(rename_all = "UPPERCASE")]
 #[strum(serialize_all = "UPPERCASE")]
@@ -57,7 +67,7 @@ impl TryFrom<CosmosDenom> for CurrencyDenom {
         export_to = "../../ts-packages/types/src/types/rust/CurrencyStringMajorAmount.ts"
     )
 )]
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct MajorAmountString(String); // see https://github.com/Aleph-Alpha/ts-rs/issues/51 for exporting type aliases
 
 #[cfg_attr(test, derive(ts_rs::TS))]
@@ -69,7 +79,7 @@ pub struct MajorAmountString(String); // see https://github.com/Aleph-Alpha/ts-r
         export_to = "../../ts-packages/types/src/types/rust/Currency.ts"
     )
 )]
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct MajorCurrencyAmount {
     pub amount: MajorAmountString,
     pub denom: CurrencyDenom,
@@ -83,8 +93,19 @@ impl MajorCurrencyAmount {
         }
     }
 
+    pub fn zero(denom: &CurrencyDenom) -> MajorCurrencyAmount {
+        MajorCurrencyAmount::new("0", denom.clone())
+    }
+
     pub fn from_cosmrs_coin(coin: &CosmosCoin) -> Result<MajorCurrencyAmount, TypesError> {
         MajorCurrencyAmount::from_cosmrs_decimal_and_denom(coin.amount, coin.denom.to_string())
+    }
+
+    pub fn from_minor_uint128_and_denom(
+        amount_minor: Uint128,
+        denom_minor: &str,
+    ) -> Result<MajorCurrencyAmount, TypesError> {
+        MajorCurrencyAmount::from_minor_decimal_and_denom(Decimal::new(amount_minor), denom_minor)
     }
 
     pub fn from_minor_decimal_and_denom(
@@ -245,6 +266,18 @@ impl TryFrom<CosmWasmCoin> for MajorCurrencyAmount {
 
     fn try_from(c: CosmWasmCoin) -> Result<Self, Self::Error> {
         MajorCurrencyAmount::from_decimal_and_denom(Decimal::new(c.amount), c.denom)
+    }
+}
+
+impl Add for MajorCurrencyAmount {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        // TODO: fix up error checking
+        let arg1 = Decimal::from_str(&self.amount.0).unwrap_or(Decimal::zero());
+        let arg2 = Decimal::from_str(&rhs.amount.0).unwrap_or(Decimal::zero());
+        MajorCurrencyAmount::from_decimal_and_denom(arg1 + arg2, self.denom_to_string())
+            .unwrap_or_else(|_| MajorCurrencyAmount::zero(&self.denom))
     }
 }
 

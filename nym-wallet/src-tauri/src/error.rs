@@ -94,6 +94,8 @@ pub enum BackendError {
   IdAlreadyExistsInWallet,
   #[error("Adding a different password to the wallet not currently supported")]
   WalletDifferentPasswordDetected,
+  #[error("Invalid delegations")]
+  DelegationsInvalid,
 }
 
 impl Serialize for BackendError {

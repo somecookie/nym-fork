@@ -1,9 +1,9 @@
 use super::VestingAccountInfo;
-use crate::coin::Coin;
 use crate::error::BackendError;
 use crate::nymd_client;
 use crate::state::State;
 use cosmwasm_std::Timestamp;
+use nym_types::currency::MajorCurrencyAmount;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use validator_client::nymd::VestingQueryClient;
@@ -15,7 +15,7 @@ use super::{OriginalVestingResponse, PledgeData};
 pub async fn locked_coins(
   block_time: Option<u64>,
   state: tauri::State<'_, Arc<RwLock<State>>>,
-) -> Result<Coin, BackendError> {
+) -> Result<MajorCurrencyAmount, BackendError> {
   Ok(
     nymd_client!(state)
       .locked_coins(
@@ -23,7 +23,7 @@ pub async fn locked_coins(
         block_time.map(Timestamp::from_seconds),
       )
       .await?
-      .into(),
+      .try_into()?,
   )
 }
 
@@ -31,7 +31,7 @@ pub async fn locked_coins(
 pub async fn spendable_coins(
   block_time: Option<u64>,
   state: tauri::State<'_, Arc<RwLock<State>>>,
-) -> Result<Coin, BackendError> {
+) -> Result<MajorCurrencyAmount, BackendError> {
   Ok(
     nymd_client!(state)
       .spendable_coins(
@@ -39,7 +39,7 @@ pub async fn spendable_coins(
         block_time.map(Timestamp::from_seconds),
       )
       .await?
-      .into(),
+      .try_into()?,
   )
 }
 
@@ -48,7 +48,7 @@ pub async fn vested_coins(
   vesting_account_address: &str,
   block_time: Option<u64>,
   state: tauri::State<'_, Arc<RwLock<State>>>,
-) -> Result<Coin, BackendError> {
+) -> Result<MajorCurrencyAmount, BackendError> {
   Ok(
     nymd_client!(state)
       .vested_coins(
@@ -56,7 +56,7 @@ pub async fn vested_coins(
         block_time.map(Timestamp::from_seconds),
       )
       .await?
-      .into(),
+      .try_into()?,
   )
 }
 
@@ -65,7 +65,7 @@ pub async fn vesting_coins(
   vesting_account_address: &str,
   block_time: Option<u64>,
   state: tauri::State<'_, Arc<RwLock<State>>>,
-) -> Result<Coin, BackendError> {
+) -> Result<MajorCurrencyAmount, BackendError> {
   Ok(
     nymd_client!(state)
       .vesting_coins(
@@ -73,7 +73,7 @@ pub async fn vesting_coins(
         block_time.map(Timestamp::from_seconds),
       )
       .await?
-      .into(),
+      .try_into()?,
   )
 }
 
@@ -112,7 +112,7 @@ pub async fn original_vesting(
     nymd_client!(state)
       .original_vesting(vesting_account_address)
       .await?
-      .into(),
+      .try_into()?,
   )
 }
 
@@ -121,7 +121,7 @@ pub async fn delegated_free(
   vesting_account_address: &str,
   block_time: Option<u64>,
   state: tauri::State<'_, Arc<RwLock<State>>>,
-) -> Result<Coin, BackendError> {
+) -> Result<MajorCurrencyAmount, BackendError> {
   Ok(
     nymd_client!(state)
       .delegated_free(
@@ -129,16 +129,17 @@ pub async fn delegated_free(
         block_time.map(Timestamp::from_seconds),
       )
       .await?
-      .into(),
+      .try_into()?,
   )
 }
 
+/// Returns the total amount of delegated tokens that have vested
 #[tauri::command]
 pub async fn delegated_vesting(
   block_time: Option<u64>,
   vesting_account_address: &str,
   state: tauri::State<'_, Arc<RwLock<State>>>,
-) -> Result<Coin, BackendError> {
+) -> Result<MajorCurrencyAmount, BackendError> {
   Ok(
     nymd_client!(state)
       .delegated_vesting(
@@ -146,7 +147,7 @@ pub async fn delegated_vesting(
         block_time.map(Timestamp::from_seconds),
       )
       .await?
-      .into(),
+      .try_into()?,
   )
 }
 
@@ -193,5 +194,5 @@ pub async fn get_account_info(
   address: &str,
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<VestingAccountInfo, BackendError> {
-  Ok(nymd_client!(state).get_account(address).await?.into())
+  Ok(nymd_client!(state).get_account(address).await?.try_into()?)
 }
