@@ -1,13 +1,12 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Box, Button, Chip, CircularProgress, Grid, LinearProgress, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, LinearProgress, Stack, TextField, Typography } from '@mui/material';
 import { PercentOutlined } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SelectionChance } from 'src/types/rust/selectionchance';
 import { validationSchema } from './validationSchema';
 import { Fee, InfoTooltip } from '../../components';
-import { InclusionProbabilityResponse } from '../../types';
+import { InclusionProbabilityResponse, SelectionChance } from '../../types';
 import { useCheckOwnership } from '../../hooks/useCheckOwnership';
 import { updateMixnode, vestingUpdateMixnode } from '../../requests';
 import { ClientContext } from '../../context/main';
@@ -78,7 +77,7 @@ export const SystemVariables = ({
   inclusionProbability: InclusionProbabilityResponse;
 }) => {
   const [nodeUpdateResponse, setNodeUpdateResponse] = useState<'success' | 'failed'>();
-  const { mixnodeDetails } = useContext(ClientContext);
+  const { currency, mixnodeDetails } = useContext(ClientContext);
   const { ownership } = useCheckOwnership();
 
   const {
@@ -126,7 +125,11 @@ export const SystemVariables = ({
           <DataField
             title="Estimated reward"
             info="Estimated reward per epoch for this profit margin if your node is selected in the active set."
-            Indicator={<Chip label="Coming soon" />}
+            Indicator={
+              <Typography sx={{ color: (theme) => theme.palette.nym.fee, fontWeight: '600' }}>
+                {rewardEstimation} {currency?.major}
+              </Typography>
+            }
           />
 
           <DataField

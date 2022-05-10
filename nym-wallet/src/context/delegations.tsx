@@ -1,5 +1,5 @@
 import React, { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import type { Coin, Network } from '../types';
+import type { Network } from '@nymproject/types';
 import type { DelegateListItem } from '../components/Delegation/types';
 
 export type TDelegationContext = {

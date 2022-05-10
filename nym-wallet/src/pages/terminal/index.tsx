@@ -4,6 +4,7 @@ import TerminalIcon from '@mui/icons-material/Terminal';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { Console } from 'src/utils/console';
 import { ClientContext } from '../../context/main';
 import { NymCard } from '../../components';
 import {
@@ -42,7 +43,7 @@ const TerminalInner: React.FC = () => {
     useGetBalance(clientDetails?.client_address);
   const [mixnodeDelegations, setMixnodeDelegations] = useState<any>();
   const [pendingEvents, setPendingEvents] = useState<any>();
-  const [pendingVestingEvents, setPendingVestingEvents] = useState<any>();
+  const [pendingVestingEvents] = useState<any>();
   const [epoch, setEpoch] = useState<any>();
   const [isBusy, setIsBusy] = useState<boolean>();
   const [error, setError] = useState<any>();
@@ -52,7 +53,7 @@ const TerminalInner: React.FC = () => {
     try {
       await fn();
     } catch (e) {
-      console.error(e);
+      Console.error(e);
       setError(e);
     }
   };

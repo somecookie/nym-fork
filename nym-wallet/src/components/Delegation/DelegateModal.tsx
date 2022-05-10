@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { IdentityKeyFormField } from '@nymproject/react/mixnodes/IdentityKeyFormField';
 import { CurrencyFormField } from '@nymproject/react/currency/CurrencyFormField';
 import { SimpleModal } from '../Modals/SimpleModal';
 import { ModalDivider } from '../Modals/ModalDivider';
 import { ModalListItem } from './ModalListItem';
-import { validateAmount, validateKey } from '../../utils';
+import { validateKey } from '../../utils';
 
 const MIN_AMOUNT_TO_DELEGATE = 10;
 

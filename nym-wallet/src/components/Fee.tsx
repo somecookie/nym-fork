@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Typography } from '@mui/material';
-import { Operation } from '../types';
+import { Operation } from '@nymproject/types';
 import { getGasFee } from '../requests';
 import { ClientContext } from '../context/main';
 

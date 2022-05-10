@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { AppBar as MuiAppBar, Grid, IconButton, Toolbar } from '@mui/material';
 import { Logout } from '@mui/icons-material';
 import TerminalIcon from '@mui/icons-material/Terminal';

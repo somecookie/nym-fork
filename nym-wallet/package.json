@@ -30,6 +30,8 @@
     "@mui/styles": "^5.2.2",
     "@nymproject/mui-theme": "^1.0.0",
     "@nymproject/react": "^1.0.0",
+    "@nymproject/types": "^1.0.0",
+    "@storybook/react": "^6.4.22",
     "@tauri-apps/api": "^1.0.0-rc.1",
     "bs58": "^4.0.1",
     "clsx": "^1.1.1",

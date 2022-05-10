@@ -1,4 +1,4 @@
-import { Coin, Denom, Gateway, MixNode, PledgeData } from './rust';
+import { Coin, Denom, Gateway, MixNode, PledgeData } from '@nymproject/types';
 
 export enum EnumNodeType {
   mixnode = 'mixnode',

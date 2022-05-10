@@ -14,7 +14,7 @@ export const RedeemModal: React.FC<{
   minimum?: number;
   currency: string;
   message: string;
-}> = ({ open, onClose, onOk, identityKey, amount, fee, minimum, currency, message }) => {
+}> = ({ open, onClose, onOk, identityKey, amount, fee, currency, message }) => {
   const handleOk = () => {
     if (onOk) {
       onOk(identityKey);

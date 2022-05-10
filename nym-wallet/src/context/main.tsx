@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { TLoginType } from 'src/pages/sign-in/types';
-import { Account, AppEnv, Network, TCurrency, TMixnodeBondDetails } from '../types';
+import { Account, AppEnv, Network, TCurrency, TMixnodeBondDetails } from '@nymproject/types';
 import { TUseuserBalance, useGetBalance } from '../hooks/useGetBalance';
 import {
   getMixnodeBondDetails,

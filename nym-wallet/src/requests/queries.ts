@@ -1,15 +1,15 @@
-import { DelegationEvent } from 'src/types/rust/delegationevent';
 import {
-  Balance,
   Coin,
-  InclusionProbabilityResponse,
-  MixnodeStatusResponse,
-  Operation,
-  StakeSaturationResponse,
   TMixnodeBondDetails,
   TPagedDelegations,
   Epoch,
-} from '../types';
+  DelegationEvent,
+  StakeSaturationResponse,
+  MixnodeStatusResponse,
+  Operation,
+  InclusionProbabilityResponse,
+  Balance,
+} from '@nymproject/types';
 import { invokeWrapper } from './wrapper';
 
 export const getReverseMixDelegations = async () =>
@@ -20,7 +20,8 @@ export const getReverseGatewayDelegations = async () =>
 
 export const getPendingDelegations = async () => invokeWrapper<DelegationEvent[]>('get_pending_delegation_events');
 
-export const getPendingVestingDelegations = async () => invokeWrapper<DelegationEvent[]>('get_pending_vesting_delegation_events');
+export const getPendingVestingDelegations = async () =>
+  invokeWrapper<DelegationEvent[]>('get_pending_vesting_delegation_events');
 
 export const getMixnodeBondDetails = async () => invokeWrapper<TMixnodeBondDetails | null>('mixnode_bond_details');
 
