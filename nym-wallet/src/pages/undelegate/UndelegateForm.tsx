@@ -13,8 +13,8 @@ import {
 } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { format } from 'date-fns';
-import { validationSchema } from './validationSchema';
 import { EnumNodeType, PendingUndelegate, TDelegation } from '@nymproject/types';
+import { validationSchema } from './validationSchema';
 import { undelegate, vestingUnelegateFromMixnode } from '../../requests';
 import { Fee } from '../../components';
 

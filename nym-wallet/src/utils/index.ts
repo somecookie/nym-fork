@@ -2,8 +2,8 @@ import { invoke } from '@tauri-apps/api';
 import { appWindow } from '@tauri-apps/api/window';
 import bs58 from 'bs58';
 import { valid } from 'semver';
-import { userBalance, majorToMinor, getLockedCoins, getSpendableCoins } from '../requests';
 import { Coin, Network, TCurrency } from '@nymproject/types';
+import { userBalance, majorToMinor, getLockedCoins, getSpendableCoins } from '../requests';
 import { Console } from './console';
 
 export const validateKey = (key: string, bytesLength: number): boolean => {

@@ -1,3 +1,4 @@
+} from '@nymproject/types';
 import { majorToMinor, minorToMajor } from './coin';
 import {
   Coin,
@@ -9,7 +10,6 @@ import {
   Period,
   PledgeData,
   VestingAccountInfo,
-} from '@nymproject/types';
 import { invokeWrapper } from './wrapper';
 
 export const getLockedCoins = async (): Promise<Coin> => {

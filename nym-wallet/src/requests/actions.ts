@@ -1,5 +1,5 @@
-import { Console } from '../utils/console';
 import { Coin, DelegationResult, EnumNodeType, TauriTxResult } from '@nymproject/types';
+import { Console } from '../utils/console';
 import { TBondArgs } from '../types';
 import { invokeWrapper } from './wrapper';
 
