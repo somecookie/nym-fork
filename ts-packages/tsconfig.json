@@ -2,12 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "target": "es2021",
-    "lib": [
-      "es2021",
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["es2021", "dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -25,7 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "@assets/*": ["../assets/*"]
-    },
+    }
   },
   "exclude": [
     "jest.config.js",

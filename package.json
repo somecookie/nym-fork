@@ -6,7 +6,8 @@
   "workspaces": [
     "ts-packages/*",
     "nym-wallet",
-    "explorer"
+    "explorer",
+    "types"
   ],
   "scripts": {
     "build": "run-s build:types build:packages",
