@@ -14,7 +14,7 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup';
 import { format } from 'date-fns';
 import { validationSchema } from './validationSchema';
-import { EnumNodeType, PendingUndelegate, TDelegation } from '../../types';
+import { EnumNodeType, PendingUndelegate, TDelegation } from '@nymproject/types';
 import { undelegate, vestingUnelegateFromMixnode } from '../../requests';
 import { Fee } from '../../components';
 
