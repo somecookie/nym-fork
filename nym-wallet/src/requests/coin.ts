@@ -1,5 +1,5 @@
 import { invokeWrapper } from './wrapper';
-import { Coin } from '../types';
+import { Coin } from '@nymproject/types';
 
 export const minorToMajor = async (amount: string) => invokeWrapper<Coin>('minor_to_major', { amount });
 

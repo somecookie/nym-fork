@@ -1,4 +1,3 @@
-import { VestingAccountInfo } from 'src/types/rust/vestingaccountinfo';
 import { majorToMinor, minorToMajor } from './coin';
 import {
   Coin,
@@ -9,7 +8,8 @@ import {
   OriginalVestingResponse,
   Period,
   PledgeData,
-} from '../types';
+  VestingAccountInfo,
+} from '@nymproject/types';
 import { invokeWrapper } from './wrapper';
 
 export const getLockedCoins = async (): Promise<Coin> => {

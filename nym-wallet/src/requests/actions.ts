@@ -1,5 +1,6 @@
 import { Console } from '../utils/console';
-import { Coin, DelegationResult, EnumNodeType, TauriTxResult, TBondArgs } from '../types';
+import { Coin, DelegationResult, EnumNodeType, TauriTxResult } from '@nymproject/types';
+import { TBondArgs } from '../types';
 import { invokeWrapper } from './wrapper';
 
 export const bond = async ({ type, data, pledge, ownerSignature }: TBondArgs): Promise<any> => {
