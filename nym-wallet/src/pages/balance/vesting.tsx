@@ -123,7 +123,7 @@ const TokenTransfer = () => {
 export const VestingCard = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { userBalance } = useContext(ClientContext);
+  const { userBalance, currency } = useContext(ClientContext);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const refreshBalances = async () => {
@@ -157,22 +157,24 @@ export const VestingCard = () => {
           size="large"
           variant="contained"
           onClick={async () => {
-            setIsLoading(true);
-            try {
-              await withdrawVestedCoins(userBalance.tokenAllocation?.spendable!);
-              await refreshBalances();
-              enqueueSnackbar('Token transfer succeeded', {
-                variant: 'success',
-                preventDuplicate: true,
-              });
-            } catch (e) {
-              Console.error(e as string);
-              enqueueSnackbar('Token transfer failed. You may not have any transferable tokens at this time', {
-                variant: 'error',
-                preventDuplicate: true,
-              });
-            } finally {
-              setIsLoading(false);
+            if (userBalance.tokenAllocation?.spendable && currency) {
+              setIsLoading(true);
+              try {
+                await withdrawVestedCoins(userBalance.tokenAllocation?.spendable, currency);
+                await refreshBalances();
+                enqueueSnackbar('Token transfer succeeded', {
+                  variant: 'success',
+                  preventDuplicate: true,
+                });
+              } catch (e) {
+                Console.error(e as string);
+                enqueueSnackbar('Token transfer failed. You may not have any transferable tokens at this time', {
+                  variant: 'error',
+                  preventDuplicate: true,
+                });
+              } finally {
+                setIsLoading(false);
+              }
             }
           }}
           endIcon={isLoading && <CircularProgress size={16} color="inherit" />}

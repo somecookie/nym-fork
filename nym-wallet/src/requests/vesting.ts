@@ -1,5 +1,3 @@
-} from '@nymproject/types';
-import { majorToMinor, minorToMajor } from './coin';
 import {
   Coin,
   DelegationResult,
@@ -9,38 +7,38 @@ import {
   OriginalVestingResponse,
   Period,
   PledgeData,
+  TCurrency,
   VestingAccountInfo,
+} from '@nymproject/types';
 import { invokeWrapper } from './wrapper';
 
 export const getLockedCoins = async (): Promise<Coin> => {
   const coin = await invokeWrapper<Coin>('locked_coins');
-  return minorToMajor(coin.amount);
+  return coin;
 };
 
 export const getSpendableCoins = async (): Promise<Coin> => {
   const coin = await invokeWrapper<Coin>('spendable_coins');
-  return minorToMajor(coin.amount);
+  return coin;
 };
 
 export const getVestingCoins = async (vestingAccountAddress: string): Promise<Coin> => {
   const coin = await invokeWrapper<Coin>('vesting_coins', { vestingAccountAddress });
-  return minorToMajor(coin.amount);
+  return coin;
 };
 
 export const getVestedCoins = async (vestingAccountAddress: string): Promise<Coin> => {
   const coin = await invokeWrapper<Coin>('vested_coins', { vestingAccountAddress });
-  return minorToMajor(coin.amount);
+  return coin;
 };
 
 export const getOriginalVesting = async (vestingAccountAddress: string): Promise<OriginalVestingResponse> => {
   const res = await invokeWrapper<OriginalVestingResponse>('original_vesting', { vestingAccountAddress });
-  const major = await minorToMajor(res.amount.amount);
-  return { ...res, amount: major };
+  return { ...res, amount: res.amount };
 };
 
-export const withdrawVestedCoins = async (amount: string): Promise<void> => {
-  const minor = await majorToMinor(amount);
-  await invokeWrapper('withdraw_vested_coins', { amount: { amount: minor.amount, denom: 'Minor' } });
+export const withdrawVestedCoins = async (amount: string, denom: TCurrency): Promise<void> => {
+  await invokeWrapper('withdraw_vested_coins', { amount: { amount, denom } });
 };
 
 export const getCurrentVestingPeriod = async (address: string) =>
