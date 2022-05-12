@@ -14,7 +14,6 @@ export const useSettingsState = (shouldUpdate: boolean) => {
   });
 
   const { mixnodeDetails } = useContext(ClientContext);
-
   const { enqueueSnackbar } = useSnackbar();
 
   const getStatus = async (mixnodeKey: string) => {
@@ -33,8 +32,6 @@ export const useSettingsState = (shouldUpdate: boolean) => {
   const getMixnodeInclusionProbability = async (mixnodeKey: string) => {
     const probability = await getInclusionProbability(mixnodeKey);
     if (probability) {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-
       setInclusionProbability({ in_active: probability.in_active, in_reserve: probability.in_reserve });
     }
   };

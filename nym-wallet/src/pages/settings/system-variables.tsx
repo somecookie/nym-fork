@@ -4,12 +4,12 @@ import { useForm } from 'react-hook-form';
 import { Box, Button, CircularProgress, Grid, LinearProgress, Stack, TextField, Typography } from '@mui/material';
 import { PercentOutlined } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { InclusionProbabilityResponse, SelectionChance } from '@nymproject/types';
+import { InclusionProbabilityResponse } from '@nymproject/types';
+import { ClientContext } from 'src/context/main';
 import { validationSchema } from './validationSchema';
 import { Fee, InfoTooltip } from '../../components';
 import { useCheckOwnership } from '../../hooks/useCheckOwnership';
 import { updateMixnode, vestingUpdateMixnode } from '../../requests';
-import { ClientContext } from '../../context/main';
 import { Console } from '../../utils/console';
 
 const DataField = ({ title, info, Indicator }: { title: string; info: string; Indicator: React.ReactElement }) => (
