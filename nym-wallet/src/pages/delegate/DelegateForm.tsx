@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress, FormControl, Grid, InputAdornment, TextF
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { DelegationResult, EnumNodeType } from '@nymproject/types';
-import {TDelegateArgs} '../../types'
+import { TDelegateArgs } from '../../types';
 import { validationSchema } from './validationSchema';
 import { ClientContext } from '../../context/main';
 import { delegate, majorToMinor, vestingDelegateToMixnode } from '../../requests';
