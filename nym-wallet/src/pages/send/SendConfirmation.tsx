@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Box, CircularProgress, Link, Typography } from '@mui/material';
+import { TransactionDetails as TTransactionDetails } from '@nymproject/types';
 import { SendError } from './SendError';
 import { ClientContext, urls } from '../../context/main';
 import { SuccessReponse } from '../../components';
 import { TransactionDetails } from '../../components/TransactionDetails';
-import { TransactionDetails as TTransactionDetails } from '../../types';
 
 export const SendConfirmation = ({
   data,

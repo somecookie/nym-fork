@@ -12,10 +12,11 @@ import {
 } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { Gateway, MixNode, EnumNodeType } from '@nymproject/types';
+import { TBondArgs } from 'src/types';
 import { NodeTypeSelector } from '../../components/NodeTypeSelector';
 import { bond, vestingBond, majorToMinor } from '../../requests';
 import { validationSchema } from './validationSchema';
-import { Gateway, MixNode, TBondArgs, EnumNodeType } from '../../types';
 import { ClientContext } from '../../context/main';
 import { Fee, TokenPoolSelector } from '../../components';
 

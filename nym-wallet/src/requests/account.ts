@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api';
-import { Account } from '../types';
+import { Account } from '@nymproject/types';
 
 export const createMnemonic = async (): Promise<string> => invoke('create_new_mnemonic');
 

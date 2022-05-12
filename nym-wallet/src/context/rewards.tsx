@@ -1,5 +1,5 @@
 import React, { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Network } from '../types';
+import { Network } from '@nymproject/types';
 
 type TRewardsContext = {
   isLoading: boolean;

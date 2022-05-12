@@ -23,5 +23,3 @@ export * from './TransactionDetails';
 export * from './ValidatorUrls';
 export * from './VestingAccountInfo';
 export * from './VestingPeriod';
-export * from './PendingUndelegate';
-export * from './Network';

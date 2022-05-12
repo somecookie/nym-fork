@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert, AlertTitle, Box, Button, CircularProgress, Grid, IconButton } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
+import { DelegationResult, Epoch, PendingUndelegate, TPagedDelegations } from '@nymproject/types';
 import { EnumRequestStatus, NymCard, RequestStatus } from '../../components';
 import { UndelegateForm } from './UndelegateForm';
 import {
@@ -9,7 +10,6 @@ import {
   getPendingVestingDelegations,
   getReverseMixDelegations,
 } from '../../requests';
-import { DelegationResult, Epoch, PendingUndelegate, TPagedDelegations } from '../../types';
 import { ClientContext } from '../../context/main';
 import { PageLayout } from '../../layouts';
 import { removeObjectDuplicates } from '../../utils';
