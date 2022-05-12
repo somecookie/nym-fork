@@ -2,7 +2,8 @@ import React, { useEffect, useContext } from 'react';
 import { Box, Button, CircularProgress, FormControl, Grid, InputAdornment, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { DelegationResult, EnumNodeType, TDelegateArgs } from '../../types';
+import { DelegationResult, EnumNodeType } from '@nymproject/types';
+import {TDelegateArgs} '../../types'
 import { validationSchema } from './validationSchema';
 import { ClientContext } from '../../context/main';
 import { delegate, majorToMinor, vestingDelegateToMixnode } from '../../requests';
