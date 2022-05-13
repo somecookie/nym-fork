@@ -1,7 +1,7 @@
-import type { Denom } from './Denom';
+import type { CurrencyDenom } from './CurrencyDenom';
 
 export interface Account {
   contract_address: string;
   client_address: string;
-  denom: Denom;
+  denom: CurrencyDenom;
 }
