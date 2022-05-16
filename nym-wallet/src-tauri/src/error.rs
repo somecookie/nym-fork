@@ -8,7 +8,10 @@ use validator_client::{nymd::error::NymdError, ValidatorClientError};
 #[derive(Error, Debug)]
 pub enum BackendError {
   #[error("{source}")]
-  TypesError { source: TypesError },
+  TypesError {
+    #[from]
+    source: TypesError,
+  },
   #[error("{source}")]
   Bip39Error {
     #[from]
@@ -114,11 +117,5 @@ impl From<ValidatorClientError> for BackendError {
       ValidatorClientError::MalformedUrlProvided(e) => e.into(),
       ValidatorClientError::NymdError(e) => e.into(),
     }
-  }
-}
-
-impl From<TypesError> for BackendError {
-  fn from(e: TypesError) -> Self {
-    e.into()
   }
 }
