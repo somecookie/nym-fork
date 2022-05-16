@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Table, TableCell, TableHead, TableRow } from '@mui/material';
 import { minorToMajor } from 'src/requests';
-import { DelegationResult } from 'src/types';
+import { DelegationResult } from '@nymproject/types';
 import { ClientContext } from 'src/context/main';
 
 export const PendingEvents = ({

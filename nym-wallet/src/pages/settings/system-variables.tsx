@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Box, Button, CircularProgress, Grid, LinearProgress, Stack, TextField, Typography } from '@mui/material';
 import { PercentOutlined } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { InclusionProbabilityResponse } from '@nymproject/types';
+import { InclusionProbabilityResponse, SelectionChance } from '@nymproject/types';
 import { ClientContext } from 'src/context/main';
 import { validationSchema } from './validationSchema';
 import { Fee, InfoTooltip } from '../../components';
