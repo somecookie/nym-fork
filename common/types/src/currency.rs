@@ -51,7 +51,11 @@ impl TryFrom<CosmosDenom> for CurrencyDenom {
     type Error = TypesError;
 
     fn try_from(value: CosmosDenom) -> Result<Self, Self::Error> {
-        match CurrencyDenom::from_str(&value.to_string()) {
+        let mut denom = value.to_string();
+        if denom.starts_with("u") {
+            denom = denom[1..].to_string();
+        }
+        match CurrencyDenom::from_str(&denom) {
             Ok(res) => Ok(res),
             Err(_e) => Err(TypesError::InvalidDenom(value.to_string())),
         }
