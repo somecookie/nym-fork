@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ChangeEvent } from 'react';
 import { InputAdornment, TextField } from '@mui/material';
 import { SxProps } from '@mui/system';
+import { CurrencyDenom, MajorCurrencyAmount } from '@nymproject/types';
 import { CoinMark } from '../coins/CoinMark';
 
 const MAX_VALUE = 1_000_000_000_000_000;
@@ -13,12 +14,12 @@ export const CurrencyFormField: React.FC<{
   fullWidth?: boolean;
   readOnly?: boolean;
   showCoinMark?: boolean;
-  initialValue?: number;
+  initialValue?: string;
   validationError?: string;
   placeholder?: string;
-  denom?: 'NYM' | 'NYMT';
-  onChanged?: (newValue: string, newAmount: number, denom: string) => void;
-  onValidate?: (isValid: boolean, error?: string) => void;
+  denom?: CurrencyDenom;
+  onChanged?: (newValue: string, newAmount: MajorCurrencyAmount) => void;
+  onValidate?: (newValue: string | undefined, isValid: boolean, error?: string) => void;
   sx?: SxProps;
 }> = ({
   autoFocus,
@@ -35,7 +36,7 @@ export const CurrencyFormField: React.FC<{
   denom = 'NYM',
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [value, setValue] = React.useState<number | undefined>(initialValue);
+  const [value, setValue] = React.useState<string | undefined>(initialValue);
   const [validationError, setValidationError] = React.useState<string | undefined>(validationErrorProp);
 
   React.useEffect(() => {
@@ -44,12 +45,12 @@ export const CurrencyFormField: React.FC<{
 
   const fireOnValidate = (result: boolean) => {
     if (onValidate) {
-      onValidate(result);
+      onValidate(value, result);
     }
     return result;
   };
 
-  const doValidation = (newValue?: string | number): boolean => {
+  const doValidation = (newValue?: string): boolean => {
     // the external validation error is set, so it overrides internal validation messages
     if (validationErrorProp) {
       setValidationError(validationErrorProp);
@@ -64,7 +65,8 @@ export const CurrencyFormField: React.FC<{
     }
 
     try {
-      const newNumber = typeof newValue === 'number' ? newValue : Number.parseFloat(newValue);
+      const numberAsString = (newValue || '0').trim();
+      const newNumber = Number.parseFloat(numberAsString);
 
       // no negative numbers
       if (newNumber < 0) {
@@ -85,7 +87,7 @@ export const CurrencyFormField: React.FC<{
       }
 
       setValidationError(undefined);
-      setValue(newNumber);
+      setValue(numberAsString);
 
       return fireOnValidate(true);
     } catch (e) {
@@ -102,21 +104,25 @@ export const CurrencyFormField: React.FC<{
   }, [initialValue]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
+    const newValue: string | undefined = event.target.value?.trim();
 
     doValidation(newValue);
 
-    const newAmount = Number.parseFloat(newValue);
-    setValue(newAmount);
     if (onChanged) {
-      // TODO: aaaaaaahhhhhh strings for currencies!
-      onChanged(`${newValue} ${denom}`, newAmount, denom);
+      const newMajorCurrencyAmount: MajorCurrencyAmount = {
+        amount: newValue,
+        denom,
+      };
+      onChanged(newValue, newMajorCurrencyAmount);
     }
   };
 
   return (
     <TextField
-      type="number"
+      // see https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/
+      // for more information about entering numbers in form fields
+      type="text"
+      inputMode="numeric"
       autoFocus={autoFocus}
       fullWidth={fullWidth}
       InputProps={{

@@ -1,10 +1,17 @@
 import * as React from 'react';
-import type { Coin } from '@nymproject/types';
-import { printableCoin } from '@nymproject/types';
+import type { MajorCurrencyAmount } from '@nymproject/types';
 
 export const Currency: React.FC<{
-  coin?: Coin;
-}> = ({ coin }) => {
-  const coinStr = React.useMemo(() => (coin ? printableCoin(coin) : '-'), [coin?.denom, coin?.amount]);
-  return <span>{coinStr}</span>;
+  majorAmount?: MajorCurrencyAmount;
+  showDenom?: boolean;
+}> = ({ majorAmount, showDenom = true }) => {
+  if (!majorAmount) {
+    return <span>-</span>;
+  }
+  return (
+    <span>
+      {majorAmount.amount}
+      {showDenom && ` ${majorAmount.denom}`}
+    </span>
+  );
 };

@@ -7,12 +7,8 @@ export default {
   component: Currency,
 } as ComponentMeta<typeof Currency>;
 
-export const Major = () => <Currency coin={{ amount: '42.123456', denom: 'NYM' }} />;
+export const Mainnet = () => <Currency majorAmount={{ amount: '42.123456', denom: 'NYM' }} />;
 
-export const Minor = () => <Currency coin={{ amount: '42123456', denom: 'UNYM' }} />;
-
-export const TestnetMajor = () => <Currency coin={{ amount: '42.123456', denom: 'NYMT' }} />;
-
-export const TestnetMinor = () => <Currency coin={{ amount: '42123456', denom: 'UNYMT' }} />;
+export const Testnet = () => <Currency majorAmount={{ amount: '42.123456', denom: 'NYMT' }} />;
 
 export const Empty = () => <Currency />;
