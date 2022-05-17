@@ -10,6 +10,7 @@
     "types"
   ],
   "scripts": {
+    "clean": "lerna run clean",
     "build": "run-s build:types build:packages",
     "build:types": "lerna run --scope @nymproject/types build --stream",
     "build:packages": "lerna run --scope @nymproject/mui-theme --scope @nymproject/react --stream build",
