@@ -77,7 +77,7 @@ export const SystemVariables = ({
   inclusionProbability: InclusionProbabilityResponse;
 }) => {
   const [nodeUpdateResponse, setNodeUpdateResponse] = useState<'success' | 'failed'>();
-  const { currency, mixnodeDetails } = useContext(ClientContext);
+  const { clientDetails, mixnodeDetails } = useContext(ClientContext);
   const { ownership } = useCheckOwnership();
 
   const {
@@ -127,7 +127,7 @@ export const SystemVariables = ({
             info="Estimated reward per epoch for this profit margin if your node is selected in the active set."
             Indicator={
               <Typography sx={{ color: (theme) => theme.palette.nym.fee, fontWeight: '600' }}>
-                {rewardEstimation} {currency?.major}
+                {rewardEstimation} {clientDetails?.denom}
               </Typography>
             }
           />

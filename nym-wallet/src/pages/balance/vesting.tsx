@@ -38,7 +38,7 @@ const vestingPeriod = (current?: Period, original?: number) => {
 };
 
 const VestingSchedule = () => {
-  const { userBalance, currency } = useContext(ClientContext);
+  const { userBalance, clientDetails } = useContext(ClientContext);
   const [vestedPercentage, setVestedPercentage] = useState(0);
 
   const calculatePercentage = () => {
@@ -70,7 +70,7 @@ const VestingSchedule = () => {
           <TableRow>
             <TableCell sx={{ borderBottom: 'none' }}>
               {userBalance.tokenAllocation?.vesting || 'n/a'} / {userBalance.originalVesting?.amount.amount}{' '}
-              {currency?.major}
+              {clientDetails?.denom}
             </TableCell>
             <TableCell align="left" sx={{ borderBottom: 'none' }}>
               {vestingPeriod(userBalance.currentVestingPeriod, userBalance.originalVesting?.number_of_periods)}
@@ -83,7 +83,7 @@ const VestingSchedule = () => {
             </TableCell>
             <TableCell sx={{ borderBottom: 'none' }} align="right">
               {userBalance.tokenAllocation?.vested || 'n/a'} / {userBalance.originalVesting?.amount.amount}{' '}
-              {currency?.major}
+              {clientDetails?.denom}
             </TableCell>
           </TableRow>
         </TableHead>
@@ -93,7 +93,7 @@ const VestingSchedule = () => {
 };
 
 const TokenTransfer = () => {
-  const { userBalance, currency } = useContext(ClientContext);
+  const { userBalance, clientDetails } = useContext(ClientContext);
   const icon = useCallback(
     () => (
       <Box sx={{ display: 'flex', mr: 1 }}>
@@ -113,7 +113,7 @@ const TokenTransfer = () => {
         </Typography>
 
         <Typography data-testid="refresh-success" sx={{ color: 'nym.background.dark' }} variant="h5" fontWeight="700">
-          {userBalance.tokenAllocation?.spendable || 'n/a'} {currency?.major}
+          {userBalance.tokenAllocation?.spendable || 'n/a'} {clientDetails?.denom}
         </Typography>
       </Grid>
     </Grid>
@@ -123,7 +123,7 @@ const TokenTransfer = () => {
 export const VestingCard = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { userBalance, currency } = useContext(ClientContext);
+  const { userBalance, clientDetails } = useContext(ClientContext);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const refreshBalances = async () => {
@@ -157,10 +157,13 @@ export const VestingCard = () => {
           size="large"
           variant="contained"
           onClick={async () => {
-            if (userBalance.tokenAllocation?.spendable && currency) {
+            if (userBalance.tokenAllocation?.spendable && clientDetails?.denom) {
               setIsLoading(true);
               try {
-                await withdrawVestedCoins(userBalance.tokenAllocation?.spendable, currency);
+                await withdrawVestedCoins(userBalance.tokenAllocation?.spendable, {
+                  amount: userBalance.tokenAllocation?.spendable,
+                  denom: clientDetails.denom,
+                });
                 await refreshBalances();
                 enqueueSnackbar('Token transfer succeeded', {
                   variant: 'success',

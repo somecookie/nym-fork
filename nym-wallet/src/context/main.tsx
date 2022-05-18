@@ -12,7 +12,6 @@ import {
   signOut,
   getEnv,
 } from '../requests';
-import { currencyMap } from '../utils';
 import { Console } from '../utils/console';
 
 export const urls = (networkName?: Network) =>
@@ -36,7 +35,6 @@ type TClientContext = {
   showSettings: boolean;
   showTerminal: boolean;
   network?: Network;
-  currency?: TCurrency;
   isLoading: boolean;
   isAdminAddress: boolean;
   error?: string;
@@ -59,7 +57,6 @@ export const ClientContextProvider = ({ children }: { children: React.ReactNode 
   const [clientDetails, setClientDetails] = useState<Account>();
   const [mixnodeDetails, setMixnodeDetails] = useState<TMixnodeBondDetails | null>();
   const [network, setNetwork] = useState<Network | undefined>();
-  const [currency, setCurrency] = useState<TCurrency>();
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showTerminal, setShowTerminal] = useState(false);
@@ -78,8 +75,6 @@ export const ClientContextProvider = ({ children }: { children: React.ReactNode 
     } catch (e) {
       enqueueSnackbar('Error loading account', { variant: 'error' });
       Console.error(e as string);
-    } finally {
-      setCurrency(currencyMap(n));
     }
   };
 
@@ -159,7 +154,6 @@ export const ClientContextProvider = ({ children }: { children: React.ReactNode 
       showSettings,
       showTerminal,
       network,
-      currency,
       setIsLoading,
       setError,
       signInWithPassword,
@@ -183,7 +177,6 @@ export const ClientContextProvider = ({ children }: { children: React.ReactNode 
       showSettings,
       showTerminal,
       network,
-      currency,
     ],
   );
 

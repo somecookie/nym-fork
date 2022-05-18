@@ -90,13 +90,13 @@ export const isGreaterThan = (a: number, b: number) => a > b;
 export const checkHasEnoughFunds = async (allocationValue: string): Promise<boolean> => {
   try {
     const walletValue = await userBalance();
-    const minorValue = await majorToMinor(allocationValue);
-    const remainingBalance = +walletValue.coin.amount - +minorValue.amount;
+
+    const remainingBalance = +walletValue.coin.amount - +allocationValue;
     return remainingBalance >= 0;
   } catch (e) {
     Console.log(e as string);
+    return false;
   }
-  return false;
 };
 
 export const checkHasEnoughLockedTokens = async (allocationValue: string) => {
@@ -115,21 +115,6 @@ export const randomNumberBetween = (min: number, max: number) => {
   const minCeil = Math.ceil(min);
   const maxFloor = Math.floor(max);
   return Math.floor(Math.random() * (maxFloor - minCeil + 1) + minCeil);
-};
-
-export const currencyMap = (network?: Network): TCurrency => {
-  switch (network) {
-    case 'SANDBOX':
-      return {
-        minor: 'UNYMT',
-        major: 'NYMT',
-      };
-    default:
-      return {
-        minor: 'UNYM',
-        major: 'NYM',
-      };
-  }
 };
 
 export const splice = (size: number, address?: string): string => {

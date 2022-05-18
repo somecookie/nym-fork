@@ -4,7 +4,7 @@ import { SuccessReponse, TransactionDetails } from '../../components';
 import { ClientContext } from '../../context/main';
 
 export const SuccessView: React.FC<{ details?: { amount: string; address: string } }> = ({ details }) => {
-  const { userBalance, currency } = useContext(ClientContext);
+  const { userBalance, clientDetails } = useContext(ClientContext);
   return (
     <>
       <SuccessReponse
@@ -24,7 +24,7 @@ export const SuccessView: React.FC<{ details?: { amount: string; address: string
           <TransactionDetails
             details={[
               { primary: 'Node', secondary: details.address },
-              { primary: 'Amount', secondary: `${details.amount} ${currency?.major}` },
+              { primary: 'Amount', secondary: `${details.amount} ${clientDetails?.denom}` },
             ]}
           />
         </Box>

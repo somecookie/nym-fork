@@ -12,7 +12,7 @@ export const PendingEvents = ({
   show: boolean;
 }) => {
   const [mapped, setMapped] = useState<Array<DelegationResult & { majorValue: string }>>([]);
-  const { currency } = useContext(ClientContext);
+  const { clientDetails } = useContext(ClientContext);
 
   const mapToMajorValue = useCallback(async () => {
     const mappedToMajor = await Promise.all(
@@ -38,7 +38,7 @@ export const PendingEvents = ({
       {mapped.map((delegation) => (
         <TableRow>
           <TableCell sx={{ maxWidth: 200, pl: 3 }}>{delegation.target_address}</TableCell>
-          <TableCell align="left">{`${delegation.majorValue} ${currency?.major}`}</TableCell>
+          <TableCell align="left">{`${delegation.majorValue} ${clientDetails?.denom}`}</TableCell>
         </TableRow>
       ))}
     </Table>

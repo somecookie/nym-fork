@@ -15,7 +15,7 @@ export const SendConfirmation = ({
   error?: string;
   isLoading: boolean;
 }) => {
-  const { userBalance, currency, network } = useContext(ClientContext);
+  const { userBalance, clientDetails, network } = useContext(ClientContext);
 
   if (!data && !error && !isLoading) return null;
 
@@ -52,7 +52,7 @@ export const SendConfirmation = ({
           <TransactionDetails
             details={[
               { primary: 'Recipient', secondary: data.to_address },
-              { primary: 'Amount', secondary: `${data.amount.amount} ${currency?.major}` },
+              { primary: 'Amount', secondary: `${data.amount.amount} ${clientDetails?.denom}` },
             ]}
           />
         </>

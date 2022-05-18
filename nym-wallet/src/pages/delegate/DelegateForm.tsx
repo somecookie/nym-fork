@@ -42,7 +42,7 @@ export const DelegateForm = ({
     resolver: yupResolver(validationSchema),
   });
 
-  const { userBalance, currency, clientDetails } = useContext(ClientContext);
+  const { userBalance, clientDetails } = useContext(ClientContext);
 
   useEffect(() => {
     reset();
@@ -106,7 +106,7 @@ export const DelegateForm = ({
               error={!!errors.amount}
               helperText={errors?.amount?.message}
               InputProps={{
-                endAdornment: <InputAdornment position="end">{currency?.major}</InputAdornment>,
+                endAdornment: <InputAdornment position="end">{clientDetails?.denom}</InputAdornment>,
               }}
             />
           </Grid>

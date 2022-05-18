@@ -3,11 +3,11 @@ import {
   DelegationResult,
   EnumNodeType,
   Gateway,
+  MajorCurrencyAmount,
   MixNode,
   OriginalVestingResponse,
   Period,
   PledgeData,
-  TCurrency,
   VestingAccountInfo,
 } from '@nymproject/types';
 import { invokeWrapper } from './wrapper';
@@ -37,7 +37,7 @@ export const getOriginalVesting = async (vestingAccountAddress: string): Promise
   return { ...res, amount: res.amount };
 };
 
-export const withdrawVestedCoins = async (amount: string, denom: TCurrency): Promise<void> => {
+export const withdrawVestedCoins = async (amount: string, denom: MajorCurrencyAmount): Promise<void> => {
   await invokeWrapper('withdraw_vested_coins', { amount: { amount, denom } });
 };
 
