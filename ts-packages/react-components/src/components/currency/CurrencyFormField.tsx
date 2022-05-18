@@ -17,8 +17,9 @@ export const CurrencyFormField: React.FC<{
   initialValue?: string;
   validationError?: string;
   placeholder?: string;
+  label?: string;
   denom?: CurrencyDenom;
-  onChanged?: (newValue: string, newAmount: MajorCurrencyAmount) => void;
+  onChanged?: (newValue: MajorCurrencyAmount) => void;
   onValidate?: (newValue: string | undefined, isValid: boolean, error?: string) => void;
   sx?: SxProps;
 }> = ({
@@ -29,6 +30,7 @@ export const CurrencyFormField: React.FC<{
   readOnly,
   initialValue,
   validationError: validationErrorProp,
+  label,
   onChanged,
   onValidate,
   sx,
@@ -113,7 +115,7 @@ export const CurrencyFormField: React.FC<{
         amount: newValue,
         denom,
       };
-      onChanged(newValue, newMajorCurrencyAmount);
+      onChanged(newMajorCurrencyAmount);
     }
   };
 
@@ -144,6 +146,7 @@ export const CurrencyFormField: React.FC<{
       helperText={validationError}
       defaultValue={initialValue}
       placeholder={placeholder}
+      label={label}
       onChange={handleChange}
       sx={sx}
     />

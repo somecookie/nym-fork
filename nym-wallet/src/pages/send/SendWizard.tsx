@@ -8,7 +8,6 @@ import { SendForm } from './SendForm';
 import { SendReview } from './SendReview';
 import { SendConfirmation } from './SendConfirmation';
 import { ClientContext } from '../../context/main';
-import { validationSchema } from './validationSchema';
 import { getGasFee, majorToMinor, send } from '../../requests';
 import { checkHasEnoughFunds } from '../../utils';
 import { Console } from '../../utils/console';
@@ -48,7 +47,6 @@ export const SendWizard = () => {
     defaultValues: {
       ...defaultValues,
     },
-    resolver: yupResolver(validationSchema),
   });
 
   const handleNextStep = methods.handleSubmit(() => setActiveStep((s) => s + 1));

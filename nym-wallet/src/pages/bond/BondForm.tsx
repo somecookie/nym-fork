@@ -13,6 +13,7 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { Gateway, MixNode, EnumNodeType } from '@nymproject/types';
+import { CurrencyFormField } from '@nymproject/react/currency/CurrencyFormField';
 import { TBondArgs } from 'src/types';
 import { NodeTypeSelector } from '../../components/NodeTypeSelector';
 import { bond, vestingBond, majorToMinor } from '../../requests';
@@ -97,7 +98,7 @@ export const BondForm = ({
     defaultValues,
   });
 
-  const { userBalance, currency, clientDetails } = useContext(ClientContext);
+  const { userBalance, clientDetails } = useContext(ClientContext);
 
   useEffect(() => {
     reset();
@@ -191,20 +192,15 @@ export const BondForm = ({
           )}
 
           <Grid item xs={12} sm={6}>
-            <TextField
-              {...register('amount')}
-              variant="outlined"
+            <CurrencyFormField
+              showCoinMark
               required
-              id="amount"
-              name="amount"
-              label="Amount to pledge"
               fullWidth
-              error={!!errors.amount}
-              helperText={errors.amount?.message}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">{currency?.major}</InputAdornment>,
-              }}
-              disabled={disabled}
+              initialValue={defaultValues.amount}
+              validationError={errors.amount?.message}
+              label="Amount"
+              onChanged={(val) => setValue('amount', val.amount)}
+              denom={clientDetails?.denom}
             />
           </Grid>
 

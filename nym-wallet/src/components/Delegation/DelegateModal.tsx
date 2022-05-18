@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Stack, Typography } from '@mui/material';
 import { IdentityKeyFormField } from '@nymproject/react/mixnodes/IdentityKeyFormField';
 import { CurrencyFormField } from '@nymproject/react/currency/CurrencyFormField';
+import { MajorCurrencyAmount } from '@nymproject/types';
 import { SimpleModal } from '../Modals/SimpleModal';
 import { ModalDivider } from '../Modals/ModalDivider';
 import { ModalListItem } from './ModalListItem';
@@ -12,10 +13,10 @@ const MIN_AMOUNT_TO_DELEGATE = 10;
 export const DelegateModal: React.FC<{
   open: boolean;
   onClose?: () => void;
-  onOk?: (identityKey?: string, amount?: number) => void;
+  onOk?: (identityKey?: string, amount?: string) => void;
   identityKey?: string;
   onIdentityKeyChanged?: (identityKey: string) => void;
-  onAmountChanged?: (amount: number) => void;
+  onAmountChanged?: (amount: string) => void;
   header?: string;
   buttonText?: string;
   rewardInterval: string;
@@ -25,7 +26,7 @@ export const DelegateModal: React.FC<{
   nodeUptimePercentage: number;
   fee: number;
   currency: string;
-  initialAmount?: number;
+  initialAmount?: string;
 }> = ({
   open,
   onIdentityKeyChanged,
@@ -45,7 +46,7 @@ export const DelegateModal: React.FC<{
   initialAmount,
 }) => {
   const [identityKey, setIdentityKey] = useState<string | undefined>(initialIdentityKey);
-  const [amount, setAmount] = useState<number | undefined>(initialAmount);
+  const [amount, setAmount] = useState<string | undefined>(initialAmount);
   const [isValidated, setValidated] = useState<boolean>(false);
   const [errorAmount, setErrorAmount] = useState<string | undefined>();
 
@@ -76,10 +77,10 @@ export const DelegateModal: React.FC<{
     }
   };
 
-  const handleAmountChanged = (newValue: string, newAmount: number) => {
-    setAmount(newAmount);
+  const handleAmountChanged = (newAmount: MajorCurrencyAmount) => {
+    setAmount(newAmount.amount);
     if (onAmountChanged) {
-      onAmountChanged(newAmount);
+      onAmountChanged(newAmount.amount);
     }
   };
 
