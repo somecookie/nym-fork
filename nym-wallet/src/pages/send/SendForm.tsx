@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Grid, TextField } from '@mui/material';
 import { CurrencyFormField } from '@nymproject/react/currency/CurrencyFormField';
-import { Fee } from '../../components';
+import { Fee } from 'src/components';
 import { ClientContext } from 'src/context/main';
 
 export const SendForm = () => {
@@ -13,6 +13,7 @@ export const SendForm = () => {
   } = useFormContext();
 
   const { clientDetails } = useContext(ClientContext);
+  console.log(errors);
 
   return (
     <Grid container spacing={3}>
@@ -35,8 +36,8 @@ export const SendForm = () => {
           required
           fullWidth
           placeholder="Amount"
-          onChanged={(val) => setValue('amount', val.amount)}
-          validationError={errors.amount?.message}
+          onChanged={(val) => setValue('amount', val, { shouldValidate: true })}
+          validationError={errors.amount?.amount?.message}
           denom={clientDetails?.denom}
         />
       </Grid>

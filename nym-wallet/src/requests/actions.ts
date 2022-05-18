@@ -1,4 +1,4 @@
-import { Coin, DelegationResult, EnumNodeType, MajorCurrencyAmount, TauriTxResult } from '@nymproject/types';
+import { DelegationResult, EnumNodeType, MajorCurrencyAmount, TauriTxResult } from '@nymproject/types';
 import { Console } from '../utils/console';
 import { TBondArgs } from '../types';
 import { invokeWrapper } from './wrapper';
@@ -34,7 +34,7 @@ export const undelegate = async ({
   }
 };
 
-export const send = async (args: { amount: Coin; address: string; memo: string }) =>
+export const send = async (args: { amount: MajorCurrencyAmount; address: string; memo: string }) =>
   invokeWrapper<TauriTxResult>('send', args);
 
 export const updateMixnode = async (profitMarginPercent: number) =>

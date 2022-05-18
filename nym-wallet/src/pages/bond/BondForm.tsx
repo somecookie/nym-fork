@@ -10,6 +10,7 @@ import { bond, vestingBond } from '../../requests';
 import { validationSchema } from './validationSchema';
 import { ClientContext } from '../../context/main';
 import { Fee, TokenPoolSelector } from '../../components';
+import { checkHasEnoughFunds, checkHasEnoughLockedTokens } from 'src/utils';
 
 type TBondFormFields = {
   withAdvancedOptions: boolean;
@@ -99,7 +100,16 @@ export const BondForm = ({
   const watchAdvancedOptions = watch('withAdvancedOptions', defaultValues.withAdvancedOptions);
 
   const onSubmit = async (data: TBondFormFields, cb: (data: TBondArgs) => Promise<void>) => {
+    if (data.tokenPool === 'balance' && !(await checkHasEnoughFunds(data.amount.amount || ''))) {
+      return setError('amount.amount', { message: 'Not enough funds in wallet' });
+    }
+
+    if (data.tokenPool === 'locked' && !(await checkHasEnoughLockedTokens(data.amount.amount || ''))) {
+      return setError('amount.amount', { message: 'Not enough locked tokens' });
+    }
+
     const formattedData = formatData(data);
+
     await cb({ type: data.nodeType, ownerSignature: data.ownerSignature, data: formattedData, pledge: data.amount })
       .then(async () => {
         if (data.tokenPool === 'balance') {
@@ -185,7 +195,7 @@ export const BondForm = ({
               required
               fullWidth
               label="Amount"
-              onChanged={(val) => setValue('amount', val)}
+              onChanged={(val) => setValue('amount', val, { shouldValidate: true })}
               denom={clientDetails?.denom}
               validationError={errors.amount?.amount?.message}
             />

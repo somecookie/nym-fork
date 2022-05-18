@@ -32,6 +32,7 @@ export const validateAmount = async (
     }
 
     const majorValueFloat = parseInt(majorAmountAsString, Number(10));
+
     return majorValueFloat >= parseInt(minimumAmountAsString, Number(10));
   } catch (e) {
     Console.error(e as string);
