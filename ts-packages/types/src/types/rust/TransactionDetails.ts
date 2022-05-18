@@ -1,7 +1,7 @@
-import type { Coin } from './Coin';
+import { MajorCurrencyAmount } from './Currency';
 
 export interface TransactionDetails {
-  amount: Coin;
+  amount: MajorCurrencyAmount;
   from_address: string;
   to_address: string;
 }
