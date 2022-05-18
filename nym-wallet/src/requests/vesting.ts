@@ -28,8 +28,8 @@ export const getOriginalVesting = async (vestingAccountAddress: string): Promise
   return { ...res, amount: res.amount };
 };
 
-export const withdrawVestedCoins = async (amount: string, denom: MajorCurrencyAmount): Promise<void> => {
-  await invokeWrapper('withdraw_vested_coins', { amount: { amount, denom } });
+export const withdrawVestedCoins = async (amount: MajorCurrencyAmount): Promise<void> => {
+  await invokeWrapper('withdraw_vested_coins', { amount });
 };
 
 export const getCurrentVestingPeriod = async (address: string) =>

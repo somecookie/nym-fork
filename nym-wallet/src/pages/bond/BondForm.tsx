@@ -1,22 +1,12 @@
 import React, { useContext, useEffect } from 'react';
-import {
-  Box,
-  Button,
-  Checkbox,
-  CircularProgress,
-  FormControl,
-  FormControlLabel,
-  Grid,
-  InputAdornment,
-  TextField,
-} from '@mui/material';
+import { Box, Button, Checkbox, CircularProgress, FormControl, FormControlLabel, Grid, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { Gateway, MixNode, EnumNodeType } from '@nymproject/types';
+import { Gateway, MixNode, EnumNodeType, MajorCurrencyAmount, CurrencyDenom } from '@nymproject/types';
 import { CurrencyFormField } from '@nymproject/react/currency/CurrencyFormField';
 import { TBondArgs } from 'src/types';
 import { NodeTypeSelector } from '../../components/NodeTypeSelector';
-import { bond, vestingBond, majorToMinor } from '../../requests';
+import { bond, vestingBond } from '../../requests';
 import { validationSchema } from './validationSchema';
 import { ClientContext } from '../../context/main';
 import { Fee, TokenPoolSelector } from '../../components';
@@ -29,7 +19,7 @@ type TBondFormFields = {
   identityKey: string;
   sphinxKey: string;
   profitMarginPercent: number;
-  amount: string;
+  amount: MajorCurrencyAmount;
   host: string;
   version: string;
   location?: string;
@@ -46,7 +36,7 @@ const defaultValues = {
   identityKey: '',
   sphinxKey: '',
   ownerSignature: '',
-  amount: '',
+  amount: { amount: '', denom: 'NYM' as CurrencyDenom },
   host: '',
   version: '',
   profitMarginPercent: 10,
@@ -92,6 +82,7 @@ export const BondForm = ({
     setValue,
     watch,
     reset,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<TBondFormFields>({
     resolver: yupResolver(validationSchema),
@@ -109,16 +100,14 @@ export const BondForm = ({
 
   const onSubmit = async (data: TBondFormFields, cb: (data: TBondArgs) => Promise<void>) => {
     const formattedData = formatData(data);
-    const pledge = await majorToMinor(data.amount);
-
-    await cb({ type: data.nodeType, ownerSignature: data.ownerSignature, data: formattedData, pledge })
+    await cb({ type: data.nodeType, ownerSignature: data.ownerSignature, data: formattedData, pledge: data.amount })
       .then(async () => {
         if (data.tokenPool === 'balance') {
           await userBalance.fetchBalance();
         } else {
           await userBalance.fetchTokenAllocation();
         }
-        onSuccess({ address: data.identityKey, amount: data.amount });
+        onSuccess({ address: data.identityKey, amount: data.amount.amount });
       })
       .catch((e) => {
         onError(e);
@@ -190,17 +179,15 @@ export const BondForm = ({
               <TokenPoolSelector onSelect={(pool) => setValue('tokenPool', pool)} disabled={disabled} />
             </Grid>
           )}
-
           <Grid item xs={12} sm={6}>
             <CurrencyFormField
               showCoinMark
               required
               fullWidth
-              initialValue={defaultValues.amount}
-              validationError={errors.amount?.message}
               label="Amount"
-              onChanged={(val) => setValue('amount', val.amount)}
+              onChanged={(val) => setValue('amount', val)}
               denom={clientDetails?.denom}
+              validationError={errors.amount?.amount?.message}
             />
           </Grid>
 

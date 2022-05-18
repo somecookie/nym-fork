@@ -160,7 +160,7 @@ export const VestingCard = () => {
             if (userBalance.tokenAllocation?.spendable && clientDetails?.denom) {
               setIsLoading(true);
               try {
-                await withdrawVestedCoins(userBalance.tokenAllocation?.spendable, {
+                await withdrawVestedCoins({
                   amount: userBalance.tokenAllocation?.spendable,
                   denom: clientDetails.denom,
                 });
