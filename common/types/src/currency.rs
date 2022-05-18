@@ -269,7 +269,11 @@ impl TryFrom<CosmWasmCoin> for MajorCurrencyAmount {
     type Error = TypesError;
 
     fn try_from(c: CosmWasmCoin) -> Result<Self, Self::Error> {
-        MajorCurrencyAmount::from_decimal_and_denom(Decimal::new(c.amount), c.denom)
+        // TODO: uuuurgh - seems like string is the only route, because Decimal::new(c.amount) divides by 1_000_000
+        MajorCurrencyAmount::from_decimal_and_denom(
+            Decimal::from_str(&c.amount.to_string())?,
+            c.denom,
+        )
     }
 }
 
@@ -292,6 +296,7 @@ mod test {
     use cosmrs::Decimal;
     use cosmrs::Denom as CosmosDenom;
     use cosmwasm_std::Coin as CosmWasmCoin;
+    use cosmwasm_std::Decimal as CosmWasmDecimal;
     use serde_json::json;
     use std::convert::TryFrom;
     use std::str::FromStr;
@@ -390,6 +395,28 @@ mod test {
         };
         let c = MajorCurrencyAmount::from_cosmrs_coin(&cosmos_coin).unwrap();
         assert_eq!(c, MajorCurrencyAmount::new("0.000001", CurrencyDenom::Nym));
+    }
+
+    #[test]
+    fn minor_cosmwasm_coin_to_major_currency() {
+        let coin = CosmWasmCoin {
+            amount: Uint128::from(1u64),
+            denom: "unym".to_string(),
+        };
+        println!("amount = {}", CosmWasmDecimal::new(coin.amount.clone()));
+        let c: MajorCurrencyAmount = coin.try_into().unwrap();
+        assert_eq!(c, MajorCurrencyAmount::new("0.000001", CurrencyDenom::Nym));
+    }
+
+    #[test]
+    fn minor_cosmwasm_coin_to_major_currency_2() {
+        let coin = CosmWasmCoin {
+            amount: Uint128::from(1_000_000u64),
+            denom: "unym".to_string(),
+        };
+        println!("amount = {}", CosmWasmDecimal::new(coin.amount.clone()));
+        let c: MajorCurrencyAmount = coin.try_into().unwrap();
+        assert_eq!(c, MajorCurrencyAmount::new("1", CurrencyDenom::Nym));
     }
 
     #[test]
