@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api';
-import { Account, Balance, Coin, OriginalVestingResponse, Period, VestingAccountInfo } from '@nymproject/types';
+import {
+  Account,
+  Balance,
+  MajorCurrencyAmount,
+  OriginalVestingResponse,
+  Period,
+  VestingAccountInfo,
+} from '@nymproject/types';
 import {
   getVestingCoins,
   getVestedCoins,
@@ -13,7 +20,7 @@ import {
 import { Console } from '../utils/console';
 
 type TTokenAllocation = {
-  [key in 'vesting' | 'vested' | 'locked' | 'spendable']: Coin['amount'];
+  [key in 'vesting' | 'vested' | 'locked' | 'spendable']: MajorCurrencyAmount['amount'];
 };
 
 export type TUseuserBalance = {

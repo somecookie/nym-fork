@@ -28,7 +28,7 @@ export const validationSchema = Yup.object().shape({
   amount: Yup.string()
     .required('An amount is required')
     .test('valid-amount', 'Pledge error', async function isValidAmount(value) {
-      const isValid = await validateAmount(value || '', '100000000');
+      const isValid = await validateAmount(value || '', '100');
 
       if (!isValid) {
         return this.createError({ message: 'A valid amount is required (min 100)' });

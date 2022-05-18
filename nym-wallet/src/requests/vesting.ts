@@ -1,5 +1,4 @@
 import {
-  Coin,
   DelegationResult,
   EnumNodeType,
   Gateway,
@@ -12,25 +11,17 @@ import {
 } from '@nymproject/types';
 import { invokeWrapper } from './wrapper';
 
-export const getLockedCoins = async (): Promise<Coin> => {
-  const coin = await invokeWrapper<Coin>('locked_coins');
-  return coin;
-};
+export const getLockedCoins = async (): Promise<MajorCurrencyAmount> =>
+  invokeWrapper<MajorCurrencyAmount>('locked_coins');
 
-export const getSpendableCoins = async (): Promise<Coin> => {
-  const coin = await invokeWrapper<Coin>('spendable_coins');
-  return coin;
-};
+export const getSpendableCoins = async (): Promise<MajorCurrencyAmount> =>
+  invokeWrapper<MajorCurrencyAmount>('spendable_coins');
 
-export const getVestingCoins = async (vestingAccountAddress: string): Promise<Coin> => {
-  const coin = await invokeWrapper<Coin>('vesting_coins', { vestingAccountAddress });
-  return coin;
-};
+export const getVestingCoins = async (vestingAccountAddress: string): Promise<MajorCurrencyAmount> =>
+  invokeWrapper<MajorCurrencyAmount>('vesting_coins', { vestingAccountAddress });
 
-export const getVestedCoins = async (vestingAccountAddress: string): Promise<Coin> => {
-  const coin = await invokeWrapper<Coin>('vested_coins', { vestingAccountAddress });
-  return coin;
-};
+export const getVestedCoins = async (vestingAccountAddress: string): Promise<MajorCurrencyAmount> =>
+  invokeWrapper<MajorCurrencyAmount>('vested_coins', { vestingAccountAddress });
 
 export const getOriginalVesting = async (vestingAccountAddress: string): Promise<OriginalVestingResponse> => {
   const res = await invokeWrapper<OriginalVestingResponse>('original_vesting', { vestingAccountAddress });
@@ -52,14 +43,19 @@ export const vestingBond = async ({
 }: {
   type: EnumNodeType;
   data: MixNode | Gateway;
-  pledge: Coin;
+  pledge: MajorCurrencyAmount;
   ownerSignature: string;
 }) => invokeWrapper<void>(`vesting_bond_${type}`, { [type]: data, ownerSignature, pledge });
 
 export const vestingUnbond = async (type: EnumNodeType) => invokeWrapper<void>(`vesting_unbond_${type}`);
 
-export const vestingDelegateToMixnode = async ({ identity, amount }: { identity: string; amount: Coin }) =>
-  invokeWrapper<DelegationResult>('vesting_delegate_to_mixnode', { identity, amount });
+export const vestingDelegateToMixnode = async ({
+  identity,
+  amount,
+}: {
+  identity: string;
+  amount: MajorCurrencyAmount;
+}) => invokeWrapper<DelegationResult>('vesting_delegate_to_mixnode', { identity, amount });
 
 export const vestingUnelegateFromMixnode = async (identity: string) =>
   invokeWrapper<DelegationResult>('vesting_undelegate_from_mixnode', { identity });
@@ -85,4 +81,4 @@ export const vestingUpdateMixnode = async (profitMarginPercent: number) =>
   invokeWrapper<void>('vesting_update_mixnode', { profitMarginPercent });
 
 export const vestingDelegatedFree = async (vestingAccountAddress: string) =>
-  invokeWrapper<Coin>('delegated_free', { vestingAccountAddress });
+  invokeWrapper<MajorCurrencyAmount>('delegated_free', { vestingAccountAddress });
