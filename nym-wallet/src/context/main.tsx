@@ -64,7 +64,7 @@ export const ClientContextProvider = ({ children }: { children: React.ReactNode 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
 
-  const userBalance = useGetBalance(clientDetails?.client_address);
+  const userBalance = useGetBalance(clientDetails);
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 

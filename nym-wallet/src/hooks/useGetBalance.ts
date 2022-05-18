@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api';
-import { Balance, Coin, OriginalVestingResponse, Period, VestingAccountInfo } from '@nymproject/types';
+import { Account, Balance, Coin, OriginalVestingResponse, Period, VestingAccountInfo } from '@nymproject/types';
 import {
   getVestingCoins,
   getVestedCoins,
@@ -30,7 +30,7 @@ export type TUseuserBalance = {
   fetchTokenAllocation: () => void;
 };
 
-export const useGetBalance = (address?: string): TUseuserBalance => {
+export const useGetBalance = (clientDetails?: Account): TUseuserBalance => {
   const [balance, setBalance] = useState<Balance>();
   const [error, setError] = useState<string>();
   const [tokenAllocation, setTokenAllocation] = useState<TTokenAllocation>();
@@ -45,7 +45,7 @@ export const useGetBalance = (address?: string): TUseuserBalance => {
 
   const fetchTokenAllocation = async () => {
     setIsLoading(true);
-    if (address) {
+    if (clientDetails?.client_address) {
       try {
         const [
           originalVestingValue,
@@ -56,13 +56,13 @@ export const useGetBalance = (address?: string): TUseuserBalance => {
           currentVestingPer,
           vestingAccountDetail,
         ] = await Promise.all([
-          getOriginalVesting(address),
-          getVestingCoins(address),
-          getVestedCoins(address),
+          getOriginalVesting(clientDetails?.client_address),
+          getVestingCoins(clientDetails?.client_address),
+          getVestedCoins(clientDetails?.client_address),
           getLockedCoins(),
           getSpendableCoins(),
-          getCurrentVestingPeriod(address),
-          getVestingAccountInfo(address),
+          getCurrentVestingPeriod(clientDetails?.client_address),
+          getVestingAccountInfo(clientDetails?.client_address),
         ]);
         setOriginalVesting(originalVestingValue);
         setCurrentVestingPeriod(currentVestingPer);
@@ -113,8 +113,8 @@ export const useGetBalance = (address?: string): TUseuserBalance => {
   };
 
   useEffect(() => {
-    handleRefresh(address);
-  }, [address]);
+    handleRefresh(clientDetails?.client_address);
+  }, [clientDetails]);
 
   return {
     error,
