@@ -13,7 +13,6 @@ export const SendForm = () => {
   } = useFormContext();
 
   const { clientDetails } = useContext(ClientContext);
-  console.log(errors);
 
   return (
     <Grid container spacing={3}>
