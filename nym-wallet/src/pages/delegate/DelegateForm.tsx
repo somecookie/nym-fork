@@ -2,7 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import { Box, Button, CircularProgress, FormControl, Grid, InputAdornment, TextField } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { DelegationResult, EnumNodeType } from '@nymproject/types';
+import { DelegationResult, EnumNodeType, MajorCurrencyAmount } from '@nymproject/types';
 import { TDelegateArgs } from '../../types';
 import { validationSchema } from './validationSchema';
 import { ClientContext } from '../../context/main';
@@ -12,14 +12,14 @@ import { Console } from '../../utils/console';
 
 type TDelegateForm = {
   identity: string;
-  amount: string;
+  amount: MajorCurrencyAmount;
   tokenPool: string;
   type: EnumNodeType;
 };
 
 const defaultValues: TDelegateForm = {
   identity: '',
-  amount: '',
+  amount: { amount: '', denom: 'NYM' },
   tokenPool: 'balance',
   type: EnumNodeType.mixnode,
 };
@@ -49,12 +49,10 @@ export const DelegateForm = ({
   }, [clientDetails]);
 
   const onSubmit = async (data: TDelegateForm, cb: (data: TDelegateArgs) => Promise<DelegationResult>) => {
-    const amount = await majorToMinor(data.amount);
-
     await cb({
       type: data.type,
       identity: data.identity,
-      amount,
+      amount: data.amount,
     })
       .then(async (res) => {
         if (data.tokenPool === 'balance') {
@@ -62,7 +60,7 @@ export const DelegateForm = ({
         } else {
           await userBalance.fetchTokenAllocation();
         }
-        onSuccess({ amount: data.amount, address: res.target_address });
+        onSuccess({ amount: data.amount.amount, address: res.target_address });
       })
       .catch((e) => {
         Console.error(e as string);
@@ -103,8 +101,8 @@ export const DelegateForm = ({
               name="amount"
               label="Amount to delegate"
               fullWidth
-              error={!!errors.amount}
-              helperText={errors?.amount?.message}
+              error={!!errors.amount?.amount}
+              helperText={errors?.amount?.amount?.message}
               InputProps={{
                 endAdornment: <InputAdornment position="end">{clientDetails?.denom}</InputAdornment>,
               }}

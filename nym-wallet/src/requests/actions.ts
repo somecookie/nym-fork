@@ -1,4 +1,4 @@
-import { Coin, DelegationResult, EnumNodeType, TauriTxResult } from '@nymproject/types';
+import { Coin, DelegationResult, EnumNodeType, MajorCurrencyAmount, TauriTxResult } from '@nymproject/types';
 import { Console } from '../utils/console';
 import { TBondArgs } from '../types';
 import { invokeWrapper } from './wrapper';
@@ -9,8 +9,15 @@ export const bond = async ({ type, data, pledge, ownerSignature }: TBondArgs): P
 
 export const unbond = async (type: EnumNodeType) => invokeWrapper<void>(`unbond_${type}`);
 
-export const delegate = async ({ type, identity, amount }: { type: EnumNodeType; identity: string; amount: Coin }) =>
-  invokeWrapper<DelegationResult>(`delegate_to_${type}`, { identity, amount });
+export const delegate = async ({
+  type,
+  identity,
+  amount,
+}: {
+  type: EnumNodeType;
+  identity: string;
+  amount: MajorCurrencyAmount;
+}) => invokeWrapper<DelegationResult>(`delegate_to_${type}`, { identity, amount });
 
 export const undelegate = async ({
   type,
