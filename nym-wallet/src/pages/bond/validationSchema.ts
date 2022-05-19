@@ -1,7 +1,5 @@
 import * as Yup from 'yup';
 import {
-  checkHasEnoughFunds,
-  checkHasEnoughLockedTokens,
   isValidHostname,
   validateAmount,
   validateKey,

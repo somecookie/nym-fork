@@ -5,12 +5,12 @@ import { useForm } from 'react-hook-form';
 import { Gateway, MixNode, EnumNodeType, MajorCurrencyAmount, CurrencyDenom } from '@nymproject/types';
 import { CurrencyFormField } from '@nymproject/react/currency/CurrencyFormField';
 import { TBondArgs } from 'src/types';
+import { checkHasEnoughFunds, checkHasEnoughLockedTokens } from 'src/utils';
 import { NodeTypeSelector } from '../../components/NodeTypeSelector';
 import { bond, vestingBond } from '../../requests';
 import { validationSchema } from './validationSchema';
 import { ClientContext } from '../../context/main';
 import { Fee, TokenPoolSelector } from '../../components';
-import { checkHasEnoughFunds, checkHasEnoughLockedTokens } from 'src/utils';
 
 type TBondFormFields = {
   withAdvancedOptions: boolean;

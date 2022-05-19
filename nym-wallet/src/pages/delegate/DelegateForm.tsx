@@ -6,7 +6,7 @@ import { DelegationResult, EnumNodeType, MajorCurrencyAmount } from '@nymproject
 import { TDelegateArgs } from '../../types';
 import { validationSchema } from './validationSchema';
 import { ClientContext } from '../../context/main';
-import { delegate, majorToMinor, vestingDelegateToMixnode } from '../../requests';
+import { delegate, vestingDelegateToMixnode } from '../../requests';
 import { Fee, TokenPoolSelector } from '../../components';
 import { Console } from '../../utils/console';
 
