@@ -1,4 +1,4 @@
-import { CurrencyDenom, Gateway, MajorCurrencyAmount, MixNode, PledgeData } from '@nymproject/types';
+import { Gateway, MajorCurrencyAmount, MixNode, PledgeData } from '@nymproject/types';
 
 export enum EnumNodeType {
   mixnode = 'mixnode',
@@ -9,27 +9,6 @@ export type TNodeOwnership = {
   hasOwnership: boolean;
   nodeType?: EnumNodeType;
   vestingPledge?: PledgeData;
-};
-
-export type TClientDetails = {
-  account: {
-    client_address: string;
-    contract_address: string;
-    demon: CurrencyDenom;
-  };
-};
-
-export type TSignInWithMnemonic = {
-  denom: string;
-} & TClientDetails;
-
-export type TCreateAccount = {
-  mnemonic: string;
-} & TSignInWithMnemonic;
-
-export type TFee = {
-  [EnumNodeType.mixnode]: MajorCurrencyAmount;
-  [EnumNodeType.gateway]?: MajorCurrencyAmount;
 };
 
 export type TPendingDelegation = {
@@ -48,16 +27,6 @@ export type TDelegation = {
 export type TPagedDelegations = {
   delegations: TDelegation[];
   start_next_after: string;
-};
-
-export type TMixnodeBondDetails = {
-  pledge_amount: MajorCurrencyAmount;
-  total_delegation: MajorCurrencyAmount;
-  owner: string;
-  layer: string;
-  block_height: number;
-  mix_node: MixNode;
-  proxy: any;
 };
 
 export type TBondArgs = {
