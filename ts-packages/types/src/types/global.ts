@@ -10,27 +10,6 @@ export type TNodeOwnership = {
   nodeType?: EnumNodeType;
 };
 
-export type TClientDetails = {
-  account: {
-    client_address: string;
-    contract_address: string;
-    demon: Denom;
-  };
-};
-
-export type TSignInWithMnemonic = {
-  denom: string;
-} & TClientDetails;
-
-export type TCreateAccount = {
-  mnemonic: string;
-} & TSignInWithMnemonic;
-
-export type TFee = {
-  [EnumNodeType.mixnode]: Coin;
-  [EnumNodeType.gateway]?: Coin;
-};
-
 export type TDelegation = {
   owner: string;
   node_identity: string;
@@ -52,11 +31,6 @@ export type TMixnodeBondDetails = {
   block_height: number;
   mix_node: MixNode;
   proxy: any;
-};
-
-export type TCurrency = {
-  minor: 'UNYM' | 'UNYMT';
-  major: 'NYM' | 'NYMT';
 };
 
 export type Period = 'Before' | { In: number } | 'After';
