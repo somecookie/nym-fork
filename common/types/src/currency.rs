@@ -236,7 +236,7 @@ impl MajorCurrencyAmount {
     }
 
     pub fn into_minor_cosmwasm_coin(self) -> Result<CosmWasmCoin, TypesError> {
-        let denom = self.denom_to_string().to_lowercase();
+        let denom = format!("u{}", self.denom_to_string().to_lowercase());
         let amount = self.to_minor_uint128()?;
         let amount = Uint128::from_str(&amount.to_string())?;
         Ok(CosmWasmCoin { denom, amount })
@@ -428,6 +428,19 @@ mod test {
         let c = MajorCurrencyAmount::new("0.000001", CurrencyDenom::Nym);
         let minor_cosmos_coin = c.into_minor_cosmos_coin().unwrap();
         assert_eq!(expected_cosmos_coin, minor_cosmos_coin);
+        assert_eq!("unym", minor_cosmos_coin.denom.to_string());
+    }
+
+    #[test]
+    fn major_currency_to_minor_cosmos_coin_2() {
+        let expected_cosmos_coin = CosmosCoin {
+            amount: CosmosDecimal::from(1000000u64),
+            denom: CosmosDenom::from_str("unym").unwrap(),
+        };
+        let c = MajorCurrencyAmount::new("1", CurrencyDenom::Nym);
+        let minor_cosmos_coin = c.into_minor_cosmos_coin().unwrap();
+        assert_eq!(expected_cosmos_coin, minor_cosmos_coin);
+        assert_eq!("unym", minor_cosmos_coin.denom.to_string());
     }
 
     #[test]
