@@ -44,7 +44,7 @@ pub async fn delegate_to_mixnode(
   amount: MajorCurrencyAmount,
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<DelegationResult, BackendError> {
-  let delegation: CosmWasmCoin = amount.clone().into_cosmwasm_coin()?;
+  let delegation: CosmWasmCoin = amount.clone().into_minor_cosmwasm_coin()?;
   nymd_client!(state)
     .delegate_to_mixnode(identity, &delegation)
     .await?;

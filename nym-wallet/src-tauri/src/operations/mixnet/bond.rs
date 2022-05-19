@@ -15,7 +15,7 @@ pub async fn bond_gateway(
   owner_signature: String,
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<(), BackendError> {
-  let pledge = pledge.into_cosmwasm_coin()?;
+  let pledge = pledge.into_minor_cosmwasm_coin()?;
   nymd_client!(state)
     .bond_gateway(gateway, owner_signature, pledge)
     .await?;
@@ -45,7 +45,7 @@ pub async fn bond_mixnode(
   pledge: MajorCurrencyAmount,
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<(), BackendError> {
-  let pledge = pledge.into_cosmwasm_coin()?;
+  let pledge = pledge.into_minor_cosmwasm_coin()?;
   nymd_client!(state)
     .bond_mixnode(mixnode, owner_signature, pledge)
     .await?;
