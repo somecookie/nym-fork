@@ -62,7 +62,7 @@ pub async fn send(
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<TauriTxResult, BackendError> {
   let address = AccountId::from_str(address)?;
-  let cosmos_amount: CosmosCoin = amount.clone().into_cosmos_coin()?;
+  let cosmos_amount: CosmosCoin = amount.clone().into_minor_cosmos_coin()?;
   let result = nymd_client!(state)
     .send(&address, vec![cosmos_amount], memo)
     .await?;
