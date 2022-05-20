@@ -160,7 +160,11 @@ export const DelegationList: React.FC<{
                   {!item.uptimePercentage ? '-' : `${Math.round(item.uptimePercentage * 100000) / 1000}%`}
                 </TableCell>
                 <TableCell>
-                  <DelegationsActionsMenu />
+                  <DelegationsActionsMenu
+                    isPending={item.isPending}
+                    onActionClick={(action) => (onItemActionClick ? onItemActionClick(item, action) : undefined)}
+                    disableRedeemingRewards={!item.reward}
+                  />
                   {/* <DelegationActions
                     isPending={item.isPending}
                     onActionClick={(action) => (onItemActionClick ? onItemActionClick(item, action) : undefined)}

@@ -90,6 +90,7 @@ export const DelegationContextProvider: FC<{
       uptimePercentage: 1.0,
       profitMarginPercentage: 0.11,
       reward: '0.00156 NYM',
+      isPending: { actionType: 'delegate', blockHeight: 1 },
     },
   ];
   const addDelegation = async (): Promise<TDelegationTransaction> => {

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   Box,
   Button,
@@ -75,7 +75,30 @@ export const DelegationActions: React.FC<{
   );
 };
 
-export const DelegationsActionsMenu = () => {
+const DelegationActionsMenuItem = ({
+  title,
+  description,
+  onClick,
+  Icon,
+  disabled,
+}: {
+  title: string;
+  description?: string;
+  onClick?: () => void;
+  Icon?: React.ReactNode;
+  disabled?: boolean;
+}) => (
+  <MenuItem sx={{ p: 2 }} onClick={onClick} disabled={disabled}>
+    <ListItemIcon sx={{ color: 'black' }}>{Icon}</ListItemIcon>
+    <ListItemText sx={{ color: 'black' }} primary={title} secondary={description} />
+  </MenuItem>
+);
+
+export const DelegationsActionsMenu: React.FC<{
+  onActionClick?: (action: DelegationListItemActions) => void;
+  isPending?: DelegateListItemPending;
+  disableRedeemingRewards?: boolean;
+}> = ({ disableRedeemingRewards, onActionClick, isPending }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -85,25 +108,17 @@ export const DelegationsActionsMenu = () => {
     setAnchorEl(null);
   };
 
-  const DelegationActionsMenuItem = useCallback(
-    ({
-      title,
-      description,
-      onClick,
-      Icon,
-    }: {
-      title: string;
-      description?: string;
-      onClick?: () => void;
-      Icon?: React.ReactNode;
-    }) => (
-      <MenuItem sx={{ p: 2 }} onClick={onClick}>
-        <ListItemIcon sx={{ color: 'black' }}>{Icon}</ListItemIcon>
-        <ListItemText sx={{ color: 'black' }} primary={title} secondary={description} />
-      </MenuItem>
-    ),
-    [],
-  );
+  if (isPending) {
+    return (
+      <Box py={0.5} fontSize="inherit" minWidth={MIN_WIDTH} minHeight={BUTTON_SIZE}>
+        <Tooltip title="There will be a new epoch roughly every hour when your changes will take effect" arrow>
+          <Typography fontSize="inherit" color="text.disabled">
+            Pending {isPending?.actionType === 'delegate' ? 'delegation' : 'undelegation'}...
+          </Typography>
+        </Tooltip>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -111,19 +126,22 @@ export const DelegationsActionsMenu = () => {
         <MoreVertSharp />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <DelegationActionsMenuItem title="Delegate more" Icon={<Delegate />} onClick={handleClose} />
-        <DelegationActionsMenuItem title="Undelegate" Icon={<Undelegate />} onClick={handleClose} />
+        <DelegationActionsMenuItem title="Delegate more" Icon={<Delegate />} onClick={handleClose} disabled={false} />
+        <DelegationActionsMenuItem title="Undelegate" Icon={<Undelegate />} onClick={handleClose} disabled={false} />
         <DelegationActionsMenuItem
           title="Compound"
           description="Add your rewards to this delegation"
           Icon={<Typography sx={{ pl: 1 }}>C</Typography>}
           onClick={handleClose}
+          disabled={disableRedeemingRewards}
         />
+
         <DelegationActionsMenuItem
           title="Redeem"
           description="Trasfer your rewards to your balance"
           Icon={<Typography>R</Typography>}
           onClick={handleClose}
+          disabled={disableRedeemingRewards}
         />
       </Menu>
     </>
