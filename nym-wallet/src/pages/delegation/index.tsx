@@ -1,8 +1,9 @@
-import React, { FC, useState } from 'react';
-import { Paper } from '@mui/material';
+import React, { FC, useContext, useState } from 'react';
+import { Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { ClientContext } from 'src/context/main';
 import { RewardsSummary } from '../../components/Rewards/RewardsSummary';
 import { Delegations } from '../../components/Delegation/Delegations';
-import { useDelegationContext } from '../../context/delegations';
+import { useDelegationContext, DelegationContextProvider } from '../../context/delegations';
 import { useRewardsContext } from '../../context/rewards';
 import { DelegateModal } from '../../components/Delegation/DelegateModal';
 import { UndelegateModal } from '../../components/Delegation/UndelegateModal';
@@ -13,7 +14,7 @@ import { DelegationModal, DelegationModalProps } from '../../components/Delegati
 
 const explorerUrl = 'https://sandbox-explorer.nymtech.net';
 
-export const DelegationPage: FC = () => {
+export const Delegation: FC = () => {
   const {
     delegations,
     totalDelegations,
@@ -215,24 +216,33 @@ export const DelegationPage: FC = () => {
 
   return (
     <>
-      <Paper elevation={0} sx={{ px: 4, py: 2, mb: 4 }}>
-        <RewardsSummary
-          isLoading={isLoadingDelegations || isLoadingRewards}
-          totalDelegation={totalDelegations}
-          totalRewards={totalRewards}
-          onClickRedeemAll={() => setShowRedeemAllRewardsModal(true)}
-        />
-      </Paper>
-
-      <Paper elevation={0} sx={{ px: 4, pt: 2, pb: 4 }}>
-        <h2>Your Delegations</h2>
-        <Delegations
-          isLoading={isLoadingDelegations}
-          items={delegations}
-          explorerUrl={explorerUrl}
-          onShowNewDelegation={() => setShowNewDelegationModal(true)}
-          onDelegationItemActionClick={handleDelegationItemActionClick}
-        />
+      <Paper elevation={0} sx={{ p: 4 }}>
+        <Stack spacing={5}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6">Delegations</Typography>
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={() => setShowNewDelegationModal(true)}
+              sx={{ py: 1.5, px: 5 }}
+            >
+              New Delegation
+            </Button>
+          </Box>
+          <RewardsSummary
+            isLoading={isLoadingDelegations || isLoadingRewards}
+            totalDelegation={totalDelegations}
+            totalRewards={totalRewards}
+            onClickRedeemAll={() => setShowRedeemAllRewardsModal(true)}
+          />
+          <Delegations
+            isLoading={isLoadingDelegations}
+            items={delegations}
+            explorerUrl={explorerUrl}
+            onShowNewDelegation={() => setShowNewDelegationModal(true)}
+            onDelegationItemActionClick={handleDelegationItemActionClick}
+          />
+        </Stack>
       </Paper>
 
       {showNewDelegationModal && (
@@ -315,5 +325,14 @@ export const DelegationPage: FC = () => {
         />
       )}
     </>
+  );
+};
+
+export const DelegationPage = () => {
+  const { network } = useContext(ClientContext);
+  return (
+    <DelegationContextProvider network={network}>
+      <Delegation />
+    </DelegationContextProvider>
   );
 };

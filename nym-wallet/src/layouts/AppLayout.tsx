@@ -35,7 +35,7 @@ export const ApplicationLayout: React.FC = ({ children }) => {
           <Nav />
         </Box>
       </Box>
-      <Container>
+      <Container maxWidth="xl">
         <AppBar />
         {children}
       </Container>

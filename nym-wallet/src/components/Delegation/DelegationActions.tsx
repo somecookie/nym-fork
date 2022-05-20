@@ -1,7 +1,20 @@
-import React from 'react';
-import { Box, Button, Stack, Tooltip, Typography } from '@mui/material';
+import React, { useCallback } from 'react';
+import {
+  Box,
+  Button,
+  Icon,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Delegate, Undelegate } from '../../svg-icons';
 import { DelegateListItemPending } from './types';
+import { MoreVertSharp } from '@mui/icons-material';
 
 export type DelegationListItemActions = 'delegate' | 'undelegate' | 'redeem';
 
@@ -59,5 +72,60 @@ export const DelegationActions: React.FC<{
         </span>
       </Tooltip>
     </Stack>
+  );
+};
+
+export const DelegationsActionsMenu = () => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const DelegationActionsMenuItem = useCallback(
+    ({
+      title,
+      description,
+      onClick,
+      Icon,
+    }: {
+      title: string;
+      description?: string;
+      onClick?: () => void;
+      Icon?: React.ReactNode;
+    }) => (
+      <MenuItem sx={{ p: 2 }} onClick={onClick}>
+        <ListItemIcon sx={{ color: 'black' }}>{Icon}</ListItemIcon>
+        <ListItemText sx={{ color: 'black' }} primary={title} secondary={description} />
+      </MenuItem>
+    ),
+    [],
+  );
+
+  return (
+    <>
+      <IconButton onClick={handleClick}>
+        <MoreVertSharp />
+      </IconButton>
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        <DelegationActionsMenuItem title="Delegate more" Icon={<Delegate />} onClick={handleClose} />
+        <DelegationActionsMenuItem title="Undelegate" Icon={<Undelegate />} onClick={handleClose} />
+        <DelegationActionsMenuItem
+          title="Compound"
+          description="Add your rewards to this delegation"
+          Icon={<Typography sx={{ pl: 1 }}>C</Typography>}
+          onClick={handleClose}
+        />
+        <DelegationActionsMenuItem
+          title="Redeem"
+          description="Trasfer your rewards to your balance"
+          Icon={<Typography>R</Typography>}
+          onClick={handleClose}
+        />
+      </Menu>
+    </>
   );
 };

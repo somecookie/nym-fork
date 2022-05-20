@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Bond, Balance, Delegate, InternalDocs, Receive, Send, Unbond, Undelegate } from '../pages';
+import { Bond, Balance, Delegate, InternalDocs, Receive, Send, Unbond, Undelegate, DelegationPage } from '../pages';
 
 export const AppRoutes = () => (
   <Switch>
@@ -24,6 +24,9 @@ export const AppRoutes = () => (
     </Route>
     <Route path="/undelegate">
       <Undelegate />
+    </Route>
+    <Route path="/delegation">
+      <DelegationPage />
     </Route>
     <Route path="/docs">
       <InternalDocs />

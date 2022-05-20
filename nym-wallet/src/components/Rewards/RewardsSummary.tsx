@@ -27,7 +27,7 @@ export const RewardsSummary: React.FC<{
       </Stack>
       <Tooltip title="Redeeming all rewards at once will be cheaper" arrow placement="left">
         <span>
-          <Button
+          {/* <Button
             variant="outlined"
             color="secondary"
             size="large"
@@ -35,7 +35,7 @@ export const RewardsSummary: React.FC<{
             disabled={!totalRewards || isLoading}
           >
             Redeem all rewards
-          </Button>
+          </Button> */}
         </span>
       </Tooltip>
     </Stack>

@@ -15,7 +15,7 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { CopyToClipboard } from '@nymproject/react/clipboard/CopyToClipboard';
-import { DelegationActions, DelegationListItemActions } from './DelegationActions';
+import { DelegationActions, DelegationListItemActions, DelegationsActionsMenu } from './DelegationActions';
 import { DelegateListItem } from './types';
 
 type Order = 'asc' | 'desc';
@@ -37,7 +37,7 @@ const headCells: HeadCell[] = [
   { id: 'id', label: 'Node ID', sortable: true },
   { id: 'delegationDate', label: 'Delegated on', sortable: true },
   { id: 'amount', label: 'Amount', sortable: true },
-  { id: 'reward', label: 'Unredeemed Rewards', sortable: true },
+  { id: 'reward', label: 'Reward', sortable: true },
   { id: 'profitMarginPercentage', label: 'Profit margin', sortable: true },
   { id: 'uptimePercentage', label: 'Uptime', sortable: true },
 ];
@@ -160,11 +160,12 @@ export const DelegationList: React.FC<{
                   {!item.uptimePercentage ? '-' : `${Math.round(item.uptimePercentage * 100000) / 1000}%`}
                 </TableCell>
                 <TableCell>
-                  <DelegationActions
+                  <DelegationsActionsMenu />
+                  {/* <DelegationActions
                     isPending={item.isPending}
                     onActionClick={(action) => (onItemActionClick ? onItemActionClick(item, action) : undefined)}
                     disableRedeemingRewards={!item.reward}
-                  />
+                  /> */}
                 </TableCell>
               </TableRow>
             ))
