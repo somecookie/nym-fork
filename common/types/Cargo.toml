@@ -29,7 +29,11 @@ config = { path = "../../common/config" }
 coconut-interface = { path = "../../common/coconut-interface" }
 # Used for Type conversion, can be extracted but its a lot of work
 vesting-contract = { path = "../../contracts/vesting" }
+ts-rs = "6.1.2"
 
 [dev-dependencies]
-ts-rs = "6.1.2"
 tempfile = "3.3.0"
+
+[features]
+default = []
+generate-ts = []

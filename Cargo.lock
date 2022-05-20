@@ -3288,6 +3288,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "topology",
+ "ts-rs",
  "url",
  "validator-api-requests",
  "validator-client",

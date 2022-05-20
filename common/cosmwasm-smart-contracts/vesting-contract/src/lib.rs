@@ -12,9 +12,9 @@ pub fn one_ucoin() -> Coin {
     Coin::new(1, DENOM)
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../../ts-packages/types/src/types/rust/Period.ts"

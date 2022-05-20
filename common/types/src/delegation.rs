@@ -6,9 +6,9 @@ use mixnet_contract_common::Delegation as MixnetContractDelegation;
 use crate::currency::MajorCurrencyAmount;
 use crate::error::TypesError;
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export,

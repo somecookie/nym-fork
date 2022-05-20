@@ -11,9 +11,9 @@ use config::defaults::all::Network as ConfigNetwork;
 use config::defaults::{mainnet, qa, sandbox};
 
 #[allow(clippy::upper_case_acronyms)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/Network.ts"

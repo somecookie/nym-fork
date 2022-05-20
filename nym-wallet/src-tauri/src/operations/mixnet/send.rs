@@ -8,9 +8,9 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use validator_client::nymd::{AccountId, CosmosCoin, TxResponse};
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/TauriTxResult.ts"
@@ -26,9 +26,9 @@ pub struct TauriTxResult {
   tx_hash: String,
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/TransactionDetails.ts"
