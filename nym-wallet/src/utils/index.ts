@@ -1,7 +1,7 @@
 import { appWindow } from '@tauri-apps/api/window';
 import bs58 from 'bs58';
 import { valid } from 'semver';
-import { basicRawCoinValueValidation, StringMajorAmount } from '@nymproject/types';
+import { basicRawCoinValueValidation, MajorAmountString } from '@nymproject/types';
 import { getLockedCoins, getSpendableCoins, userBalance } from '../requests';
 import { Console } from './console';
 
@@ -18,8 +18,8 @@ export const validateKey = (key: string, bytesLength: number): boolean => {
 };
 
 export const validateAmount = async (
-  majorAmountAsString: StringMajorAmount,
-  minimumAmountAsString: StringMajorAmount,
+  majorAmountAsString: MajorAmountString,
+  minimumAmountAsString: MajorAmountString,
 ): Promise<boolean> => {
   // tests basic coin value requirements, like no more than 6 decimal places, value lower than total supply, etc
   if (!Number(majorAmountAsString)) {

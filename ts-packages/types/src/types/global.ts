@@ -1,4 +1,4 @@
-import { Coin, Denom, MixNode } from './rust';
+import { MixNode, MajorCurrencyAmount } from './rust';
 
 export enum EnumNodeType {
   mixnode = 'mixnode',
@@ -13,7 +13,7 @@ export type TNodeOwnership = {
 export type TDelegation = {
   owner: string;
   node_identity: string;
-  amount: Coin;
+  amount: MajorCurrencyAmount;
   block_height: number;
   proxy: string; // proxy address used to delegate the funds on behalf of anouther address
 };
@@ -24,8 +24,8 @@ export type TPagedDelegations = {
 };
 
 export type TMixnodeBondDetails = {
-  pledge_amount: Coin;
-  total_delegation: Coin;
+  pledge_amount: MajorCurrencyAmount;
+  total_delegation: MajorCurrencyAmount;
   owner: string;
   layer: string;
   block_height: number;

@@ -84,7 +84,7 @@ pub struct VestingAccountInfo {
   staking_address: Option<String>,
   start_time: u64,
   periods: Vec<VestingPeriod>,
-  coin: MajorCurrencyAmount,
+  amount: MajorCurrencyAmount,
 }
 
 impl TryFrom<VestingAccount> for VestingAccountInfo {
@@ -95,13 +95,13 @@ impl TryFrom<VestingAccount> for VestingAccountInfo {
     for period in account.periods() {
       periods.push(period.into());
     }
-    let coin: MajorCurrencyAmount = account.coin().try_into()?;
+    let amount: MajorCurrencyAmount = account.coin().try_into()?;
     Ok(Self {
       owner_address: account.owner_address().to_string(),
       staking_address: account.staking_address().map(|a| a.to_string()),
       start_time: account.start_time().seconds(),
       periods,
-      coin,
+      amount,
     })
   }
 }

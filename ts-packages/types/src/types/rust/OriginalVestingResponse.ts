@@ -1,7 +1,7 @@
-import type { Coin } from './Coin';
+import { MajorCurrencyAmount } from './Currency';
 
 export interface OriginalVestingResponse {
-  amount: Coin;
+  amount: MajorCurrencyAmount;
   number_of_periods: number;
   period_duration: bigint;
 }

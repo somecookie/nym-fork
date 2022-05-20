@@ -1,1 +1,1 @@
-export type StringMajorAmount = string;
+export type MajorAmountString = string;

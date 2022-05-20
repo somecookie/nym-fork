@@ -1,5 +1,4 @@
 import {
-  Coin,
   TMixnodeBondDetails,
   TPagedDelegations,
   Epoch,
@@ -9,6 +8,7 @@ import {
   Operation,
   InclusionProbabilityResponse,
   Balance,
+  MajorCurrencyAmount,
 } from '@nymproject/types';
 import { invokeWrapper } from './wrapper';
 
@@ -41,7 +41,7 @@ export const checkGatewayOwnership = async () => invokeWrapper<boolean>('owns_ga
 // NOTE: this uses OUTDATED defaults that might have no resemblance with the reality
 // as for the actual transaction, the gas cost is being simulated beforehand
 export const getGasFee = async (operation: Operation) =>
-  invokeWrapper<Coin>('outdated_get_approximate_fee', { operation });
+  invokeWrapper<MajorCurrencyAmount>('outdated_get_approximate_fee', { operation });
 
 export const getInclusionProbability = async (identity: string) =>
   invokeWrapper<InclusionProbabilityResponse>('mixnode_inclusion_probability', { identity });

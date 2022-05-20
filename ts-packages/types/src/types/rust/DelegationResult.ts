@@ -1,7 +1,7 @@
-import type { Coin } from './Coin';
+import { MajorCurrencyAmount } from './Currency';
 
 export interface DelegationResult {
   source_address: string;
   target_address: string;
-  amount: Coin | null;
+  amount: MajorCurrencyAmount | null;
 }

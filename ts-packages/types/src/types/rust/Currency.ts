@@ -1,7 +1,7 @@
 import type { CurrencyDenom } from './CurrencyDenom';
-import type { StringMajorAmount } from './CurrencyStringMajorAmount';
+import type { MajorAmountString } from './CurrencyStringMajorAmount';
 
 export interface MajorCurrencyAmount {
-  amount: StringMajorAmount;
+  amount: MajorAmountString;
   denom: CurrencyDenom;
 }

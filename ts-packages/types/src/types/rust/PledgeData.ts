@@ -1,6 +1,6 @@
-import type { Coin } from './Coin';
+import { MajorCurrencyAmount } from './Currency';
 
 export interface PledgeData {
-  amount: Coin;
+  amount: MajorCurrencyAmount;
   block_time: bigint;
 }

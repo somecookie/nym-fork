@@ -1,7 +1,6 @@
 export * from './Account';
 export * from './AppEnv';
 export * from './Balance';
-export * from './Coin';
 export * from './CoreNodeStatusResponse';
 export * from './CreatedAccount';
 export * from './Currency';
