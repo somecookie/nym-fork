@@ -6,7 +6,7 @@ use mixnet_contract_common::{
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     test,
     ts(
@@ -55,7 +55,7 @@ impl From<MixnetContractMixNode> for MixNode {
 
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export,
@@ -66,14 +66,11 @@ impl From<MixnetContractMixNode> for MixNode {
 pub struct MixNodeBond {
     pub pledge_amount: MajorCurrencyAmount,
     pub total_delegation: MajorCurrencyAmount,
-    #[cfg_attr(test, ts(type = "String"))]
-    pub owner: Addr,
-    #[cfg_attr(test, ts(type = "String"))]
-    pub layer: Layer,
+    pub owner: String,
+    pub layer: String,
     pub block_height: u64,
     pub mix_node: MixNode,
-    #[cfg_attr(test, ts(optional, type = "String"))]
-    pub proxy: Option<Addr>,
+    pub proxy: Option<String>,
     pub accumulated_rewards: Option<MajorCurrencyAmount>,
 }
 
@@ -122,11 +119,11 @@ impl TryFrom<MixnetContractMixNodeBond> for MixNodeBond {
         Ok(MixNodeBond {
             pledge_amount,
             total_delegation,
-            owner,
-            layer,
+            owner: owner.into_string(),
+            layer: layer.to_string(),
             block_height,
             mix_node: mix_node.into(),
-            proxy,
+            proxy: proxy.map(|p| p.into_string()),
             accumulated_rewards,
         })
     }

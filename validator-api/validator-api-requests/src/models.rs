@@ -7,9 +7,9 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../ts-packages/types/src/types/rust/MixnodeStatus.ts"
@@ -30,9 +30,9 @@ impl MixnodeStatus {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../ts-packages/types/src/types/rust/CoreNodeStatusResponse.ts"
@@ -44,9 +44,9 @@ pub struct CoreNodeStatusResponse {
 }
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, JsonSchema)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../ts-packages/types/src/types/rust/MixnodeStatusResponse.ts"
@@ -73,9 +73,9 @@ pub struct UptimeResponse {
 }
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, JsonSchema)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../ts-packages/types/src/types/rust/StakeSaturationResponse.ts"
@@ -87,9 +87,9 @@ pub struct StakeSaturationResponse {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../ts-packages/types/src/types/rust/SelectionChance.ts"
@@ -128,9 +128,9 @@ impl fmt::Display for SelectionChance {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../ts-packages/types/src/types/rust/InclusionProbabilityResponse.ts"

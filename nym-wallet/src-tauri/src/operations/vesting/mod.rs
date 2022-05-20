@@ -10,9 +10,9 @@ pub mod bond;
 pub mod delegate;
 pub mod queries;
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/PledgeData.ts"
@@ -42,9 +42,9 @@ impl PledgeData {
   }
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/OriginalVestingResponse.ts"
@@ -70,9 +70,9 @@ impl TryFrom<VestingOriginalVestingResponse> for OriginalVestingResponse {
   }
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/VestingAccountInfo.ts"
@@ -106,9 +106,9 @@ impl TryFrom<VestingAccount> for VestingAccountInfo {
   }
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/VestingPeriod.ts"

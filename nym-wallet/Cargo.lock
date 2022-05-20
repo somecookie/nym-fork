@@ -2745,6 +2745,7 @@ dependencies = [
  "serde_repr",
  "thiserror",
  "time 0.3.7",
+ "ts-rs",
 ]
 
 [[package]]
@@ -2962,6 +2963,7 @@ dependencies = [
  "serde_json",
  "strum 0.23.0",
  "thiserror",
+ "ts-rs",
  "url",
  "validator-client",
  "vesting-contract",
@@ -5418,6 +5420,7 @@ dependencies = [
  "mixnet-contract-common",
  "schemars",
  "serde",
+ "ts-rs",
 ]
 
 [[package]]
@@ -5445,6 +5448,7 @@ dependencies = [
  "sha2 0.9.9",
  "thiserror",
  "tokio",
+ "ts-rs",
  "url",
  "validator-api-requests",
  "vesting-contract",
@@ -5505,6 +5509,7 @@ dependencies = [
  "mixnet-contract-common",
  "schemars",
  "serde",
+ "ts-rs",
 ]
 
 [[package]]

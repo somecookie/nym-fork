@@ -2,9 +2,9 @@ use crate::currency::{CurrencyDenom, MajorCurrencyAmount};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../ts-packages/types/src/types/rust/Account.ts"
@@ -27,9 +27,9 @@ impl Account {
     }
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../ts-packages/types/src/types/rust/AccountWithMnemonic.ts"
@@ -41,9 +41,9 @@ pub struct AccountWithMnemonic {
     pub mnemonic: String,
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../ts-packages/types/src/types/rust/Balance.ts"

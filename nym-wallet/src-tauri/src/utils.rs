@@ -13,9 +13,9 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 
 #[allow(non_snake_case)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(export, export_to = "../../ts-packages/types/src/types/rust/AppEnv.ts")
 )]
 #[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
@@ -79,9 +79,9 @@ pub async fn outdated_get_approximate_fee(
   Ok(total_fee)
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/DelegationResult.ts"
@@ -121,9 +121,9 @@ impl TryFrom<Delegation> for DelegationResult {
   }
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/DelegationEvent.ts"
@@ -152,9 +152,9 @@ impl TryFrom<ContractDelegationEvent> for DelegationEvent {
   }
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/PendingUndelegate.ts"

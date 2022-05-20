@@ -6,7 +6,7 @@ use mixnet_contract_common::{
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     test,
     ts(
@@ -52,7 +52,7 @@ impl From<MixnetContractGateway> for Gateway {
 
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export,
@@ -62,12 +62,10 @@ impl From<MixnetContractGateway> for Gateway {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize, JsonSchema)]
 pub struct GatewayBond {
     pub pledge_amount: MajorCurrencyAmount,
-    #[cfg_attr(test, ts(type = "String"))]
-    pub owner: Addr,
+    pub owner: String,
     pub block_height: u64,
     pub gateway: Gateway,
-    #[cfg_attr(test, ts(optional, type = "String"))]
-    pub proxy: Option<Addr>,
+    pub proxy: Option<String>,
 }
 
 impl GatewayBond {
@@ -100,10 +98,10 @@ impl TryFrom<MixnetContractGatewayBond> for GatewayBond {
 
         Ok(GatewayBond {
             pledge_amount,
-            owner,
+            owner: owner.into_string(),
             block_height,
             gateway: gateway.into(),
-            proxy,
+            proxy: proxy.map(|p| p.into_string()),
         })
     }
 }

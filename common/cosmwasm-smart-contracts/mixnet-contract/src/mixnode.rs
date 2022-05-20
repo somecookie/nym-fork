@@ -14,9 +14,9 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 use std::cmp::Ordering;
 use std::fmt::Display;
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
+    feature = "generate-ts",
     ts(
         export,
         export_to = "../../../ts-packages/types/src/types/rust/RewardedSetNodeStatus.ts"

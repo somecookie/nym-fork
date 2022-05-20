@@ -12,9 +12,9 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-  test,
+  feature = "generate-ts",
   ts(
     export,
     export_to = "../../ts-packages/types/src/types/rust/DelegationSummaryResponse.ts"
