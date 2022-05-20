@@ -8,7 +8,6 @@ export * from './CurrencyDenom';
 export * from './CurrencyStringMajorAmount';
 export * from './DelegationEvent';
 export * from './DelegationResult';
-export * from './Denom';
 export * from './Epoch';
 export * from './Gateway';
 export * from './InclusionProbabilityResponse';
