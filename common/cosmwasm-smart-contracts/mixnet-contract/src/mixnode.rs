@@ -109,14 +109,6 @@ impl PendingUndelegate {
     }
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[cfg_attr(
-    test,
-    ts(
-        export,
-        export_to = "../../../ts-packages/types/src/types/rust/Mixnode.ts"
-    )
-)]
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize, JsonSchema)]
 pub struct MixNode {
     pub host: String,
