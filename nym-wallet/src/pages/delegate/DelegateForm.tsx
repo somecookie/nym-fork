@@ -94,11 +94,11 @@ export const DelegateForm = ({
 
           <Grid item xs={6}>
             <TextField
-              {...register('amount')}
+              {...register('amount.amount')}
               required
               variant="outlined"
               id="amount"
-              name="amount"
+              name="amount.amount"
               label="Amount to delegate"
               fullWidth
               error={!!errors.amount?.amount}
