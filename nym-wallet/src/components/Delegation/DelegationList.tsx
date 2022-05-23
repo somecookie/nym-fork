@@ -15,8 +15,9 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { CopyToClipboard } from '@nymproject/react/clipboard/CopyToClipboard';
-import { DelegationActions, DelegationListItemActions, DelegationsActionsMenu } from './DelegationActions';
+import { DelegationListItemActions, DelegationsActionsMenu } from './DelegationActions';
 import { DelegateListItem } from './types';
+import { Currency } from '@nymproject/react/currency/Currency';
 
 type Order = 'asc' | 'desc';
 
@@ -36,7 +37,7 @@ interface HeadCell {
 const headCells: HeadCell[] = [
   { id: 'id', label: 'Node ID', sortable: true },
   { id: 'delegationDate', label: 'Delegated on', sortable: true },
-  { id: 'amount', label: 'Amount', sortable: true },
+  { id: 'amount', label: 'Delegation', sortable: true },
   { id: 'reward', label: 'Reward', sortable: true },
   { id: 'profitMarginPercentage', label: 'Profit margin', sortable: true },
   { id: 'uptimePercentage', label: 'Uptime', sortable: true },
@@ -151,7 +152,9 @@ export const DelegationList: React.FC<{
                   </Tooltip>
                 </TableCell>
                 <TableCell>{item.delegationDate.toLocaleDateString()}</TableCell>
-                <TableCell>{item.amount}</TableCell>
+                <TableCell>
+                  <Currency majorAmount={{ amount: item.amount || '-', denom: 'NYM' }} />
+                </TableCell>
                 <TableCell>{item.reward}</TableCell>
                 <TableCell>
                   {!item.profitMarginPercentage ? '-' : `${Math.round(item.profitMarginPercentage * 100000) / 1000}%`}
