@@ -26,14 +26,18 @@ export const RewardsContext = createContext<TRewardsContext>({
 });
 
 export const RewardsContextProvider: FC<{
-  network: Network;
+  network?: Network;
 }> = ({ network, children }) => {
   const [currentNetwork, setCurrentNetwork] = useState<undefined | Network>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>();
   const [totalRewards, setTotalRewards] = useState<undefined | string>();
 
-  const resetState = () => {
+  const getTotalRewards = async () => {
+    setTotalRewards('500 NYM');
+  };
+
+  const resetState = async () => {
     setIsLoading(true);
     setError(undefined);
     setTotalRewards(undefined);
@@ -41,10 +45,9 @@ export const RewardsContextProvider: FC<{
 
   // TODO: implement
   const refresh = useCallback(async () => {
-    resetState();
-    // TODO: do work
-
+    await getTotalRewards();
     setIsLoading(false);
+    // TODO: do work
   }, [network]);
 
   useEffect(() => {

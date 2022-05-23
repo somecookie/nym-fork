@@ -4,7 +4,7 @@ export interface DelegateListItem {
   /** Date of delegation */
   delegationDate: Date;
   /** Delegated amount as a string including the currency, e.g. 1.05 NYM */
-  amount: number | string; // TODO: fix up
+  amount: string; // TODO: fix up
   /** Reward amount as a string, e.g. 1.05 NYM on mainnet */
   reward?: string;
   /** A number between 0 and 1 */

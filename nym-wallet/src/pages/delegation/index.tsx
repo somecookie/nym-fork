@@ -4,7 +4,7 @@ import { ClientContext } from 'src/context/main';
 import { RewardsSummary } from '../../components/Rewards/RewardsSummary';
 import { Delegations } from '../../components/Delegation/Delegations';
 import { useDelegationContext, DelegationContextProvider } from '../../context/delegations';
-import { useRewardsContext } from '../../context/rewards';
+import { RewardsContextProvider, useRewardsContext } from '../../context/rewards';
 import { DelegateModal } from '../../components/Delegation/DelegateModal';
 import { UndelegateModal } from '../../components/Delegation/UndelegateModal';
 import { DelegateListItem } from '../../components/Delegation/types';
@@ -15,16 +15,6 @@ import { DelegationModal, DelegationModalProps } from '../../components/Delegati
 const explorerUrl = 'https://sandbox-explorer.nymtech.net';
 
 export const Delegation: FC = () => {
-  const {
-    delegations,
-    totalDelegations,
-    isLoading: isLoadingDelegations,
-    addDelegation,
-    updateDelegation,
-    undelegate,
-  } = useDelegationContext();
-  const { totalRewards, isLoading: isLoadingRewards } = useRewardsContext();
-  const { redeemAllRewards, redeemRewards } = useRewardsContext();
   const [showNewDelegationModal, setShowNewDelegationModal] = useState<boolean>(false);
   const [showDelegateMoreModal, setShowDelegateMoreModal] = useState<boolean>(false);
   const [showUndelegateModal, setShowUndelegateModal] = useState<boolean>(false);
@@ -33,8 +23,16 @@ export const Delegation: FC = () => {
   const [confirmationModalProps, setConfirmationModalProps] = useState<DelegationModalProps | undefined>();
   const [currentDelegationListActionItem, setCurrentDelegationListActionItem] = useState<DelegateListItem>();
 
-  // TODO: replace with real value
-  const currentAccountId = 'abcdefghijklmnopqrst';
+  const { clientDetails } = useContext(ClientContext);
+  const { redeemAllRewards, redeemRewards, totalRewards, isLoading: isLoadingRewards } = useRewardsContext();
+  const {
+    delegations,
+    totalDelegations,
+    isLoading: isLoadingDelegations,
+    addDelegation,
+    updateDelegation,
+    undelegate,
+  } = useDelegationContext();
 
   // TODO: replace with real operation
   const getWalletBalance = async () => '1200 NYM';
@@ -171,21 +169,23 @@ export const Delegation: FC = () => {
     });
     setShowRedeemRewardsModal(false);
     setCurrentDelegationListActionItem(undefined);
-    try {
-      const tx = await redeemRewards(identityKey);
-      setConfirmationModalProps({
-        status: 'success',
-        action: 'redeem',
-        balance: await getWalletBalance(),
-        recipient: currentAccountId,
-        transactionUrl: tx.transactionUrl,
-      });
-    } catch (e) {
-      setConfirmationModalProps({
-        status: 'error',
-        action: 'redeem',
-        message: (e as Error).message,
-      });
+    if (clientDetails?.client_address) {
+      try {
+        const tx = await redeemRewards(identityKey);
+        setConfirmationModalProps({
+          status: 'success',
+          action: 'redeem',
+          balance: await getWalletBalance(),
+          recipient: clientDetails?.client_address,
+          transactionUrl: tx.transactionUrl,
+        });
+      } catch (e) {
+        setConfirmationModalProps({
+          status: 'error',
+          action: 'redeem',
+          message: (e as Error).message,
+        });
+      }
     }
   };
 
@@ -202,7 +202,7 @@ export const Delegation: FC = () => {
         status: 'success',
         action: 'redeem-all',
         balance: await getWalletBalance(),
-        recipient: currentAccountId,
+        recipient: clientDetails?.client_address,
         transactionUrl: tx.transactionUrl,
       });
     } catch (e) {
@@ -332,7 +332,9 @@ export const DelegationPage = () => {
   const { network } = useContext(ClientContext);
   return (
     <DelegationContextProvider network={network}>
-      <Delegation />
+      <RewardsContextProvider network={network}>
+        <Delegation />
+      </RewardsContextProvider>
     </DelegationContextProvider>
   );
 };

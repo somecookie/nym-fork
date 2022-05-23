@@ -25,7 +25,7 @@ export const DelegationContext = createContext<TDelegationContext>({
     {
       id: 'FiojKW7oY9WQmLCiYAsCA21tpowZHS6zcUoyYm319p6Z',
       delegationDate: new Date(2021, 1, 1),
-      amount: '452 NYM',
+      amount: '452',
       uptimePercentage: 0.832,
       profitMarginPercentage: 0.1122323949234,
       reward: '0.001523434 NYM',
@@ -33,14 +33,14 @@ export const DelegationContext = createContext<TDelegationContext>({
     {
       id: 'DT8S942S8AQs2zKHS9SVo1GyHmuca3pfL2uLhLksJ3D8',
       delegationDate: new Date(2021, 1, 2),
-      amount: '1000000 NYM',
+      amount: '1000000',
       uptimePercentage: 0.2323423424,
       profitMarginPercentage: 0.1,
     },
     {
       id: '6hn3z2yCQ3KP8XyqMRMV4c6DvYWG1vvrAWpgkxe1CV9C',
       delegationDate: new Date(2021, 1, 3),
-      amount: '1 NYM',
+      amount: '1',
       uptimePercentage: 1.0,
       profitMarginPercentage: 0.11,
       reward: '0.00156 NYM',
@@ -86,13 +86,14 @@ export const DelegationContextProvider: FC<{
     {
       id: '6hn3z2yCQ3KP8XyqMRMV4c6DvYWG1vvrAWpgkxe1CV9C',
       delegationDate: new Date(2021, 1, 3),
-      amount: '1 NYM',
+      amount: '1.00',
       uptimePercentage: 1.0,
       profitMarginPercentage: 0.11,
       reward: '0.00156 NYM',
       isPending: { actionType: 'delegate', blockHeight: 1 },
     },
   ];
+
   const addDelegation = async (): Promise<TDelegationTransaction> => {
     throw new Error('Not implemented');
   };
@@ -112,7 +113,10 @@ export const DelegationContextProvider: FC<{
 
   const refresh = useCallback(async () => {
     try {
-      setDelegations(await getDelegations());
+      const delegations = await getDelegations();
+
+      setDelegations(delegations);
+      setTotalDelegations('500 NYM');
     } catch (e) {
       setError((e as Error).message);
     }
