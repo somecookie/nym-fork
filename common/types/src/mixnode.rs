@@ -1,8 +1,57 @@
 use crate::currency::MajorCurrencyAmount;
 use crate::error::TypesError;
-use mixnet_contract_common::{Addr, Layer, MixNode, MixNodeBond as MixnetContractMixNodeBond};
+use mixnet_contract_common::{
+    Addr, Layer, MixNode as MixnetContractMixNode, MixNodeBond as MixnetContractMixNodeBond,
+};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(
+    test,
+    ts(
+        export,
+        export_to = "../../../ts-packages/types/src/types/rust/Mixnode.ts"
+    )
+)]
+#[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize, JsonSchema)]
+pub struct MixNode {
+    pub host: String,
+    pub mix_port: u16,
+    pub verloc_port: u16,
+    pub http_api_port: u16,
+    pub sphinx_key: String,
+    /// Base58 encoded ed25519 EdDSA public key.
+    pub identity_key: String,
+    pub version: String,
+    pub profit_margin_percent: u8,
+}
+
+impl From<MixnetContractMixNode> for MixNode {
+    fn from(value: MixnetContractMixNode) -> Self {
+        let MixnetContractMixNode {
+            host,
+            mix_port,
+            verloc_port,
+            http_api_port,
+            sphinx_key,
+            identity_key,
+            version,
+            profit_margin_percent,
+        } = value;
+
+        Self {
+            host,
+            mix_port,
+            verloc_port,
+            http_api_port,
+            sphinx_key,
+            identity_key,
+            version,
+            profit_margin_percent,
+        }
+    }
+}
 
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[cfg_attr(
@@ -17,10 +66,13 @@ use serde::{Deserialize, Serialize};
 pub struct MixNodeBond {
     pub pledge_amount: MajorCurrencyAmount,
     pub total_delegation: MajorCurrencyAmount,
+    #[cfg_attr(test, ts(type = "String"))]
     pub owner: Addr,
+    #[cfg_attr(test, ts(type = "String"))]
     pub layer: Layer,
     pub block_height: u64,
     pub mix_node: MixNode,
+    #[cfg_attr(test, ts(optional, type = "String"))]
     pub proxy: Option<Addr>,
     pub accumulated_rewards: Option<MajorCurrencyAmount>,
 }
@@ -73,7 +125,7 @@ impl TryFrom<MixnetContractMixNodeBond> for MixNodeBond {
             owner,
             layer,
             block_height,
-            mix_node,
+            mix_node: mix_node.into(),
             proxy,
             accumulated_rewards,
         })

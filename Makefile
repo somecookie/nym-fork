@@ -56,6 +56,6 @@ wasm:
 	RUSTFLAGS='-C link-arg=-s' cargo build --manifest-path contracts/Cargo.toml --release --target wasm32-unknown-unknown
 
 generate-typescript:
-    cargo test --workspace --all-features
-    yarn types:lint:fix
-#     cargo test --features generate-ts --workspace
+#	cd nym-wallet && cargo test && cd ..
+	cargo test --workspace --all-features
+	yarn types:lint:fix

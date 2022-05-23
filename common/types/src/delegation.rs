@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use mixnet_contract_common::{Addr, Delegation as MixnetContractDelegation, IdentityKey};
+use mixnet_contract_common::Delegation as MixnetContractDelegation;
 
 use crate::currency::MajorCurrencyAmount;
 use crate::error::TypesError;
@@ -17,11 +17,11 @@ use crate::error::TypesError;
 )]
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, JsonSchema)]
 pub struct Delegation {
-    pub owner: Addr,
-    pub node_identity: IdentityKey,
+    pub owner: String,
+    pub node_identity: String,
     pub amount: MajorCurrencyAmount,
     pub block_height: u64,
-    pub proxy: Option<Addr>, // proxy address used to delegate the funds on behalf of anouther address
+    pub proxy: Option<String>, // proxy address used to delegate the funds on behalf of anouther address
 }
 
 impl TryFrom<MixnetContractDelegation> for Delegation {
@@ -39,11 +39,11 @@ impl TryFrom<MixnetContractDelegation> for Delegation {
         let amount: MajorCurrencyAmount = amount.try_into()?;
 
         Ok(Delegation {
-            owner,
+            owner: owner.into_string(),
             node_identity,
             amount,
             block_height,
-            proxy,
+            proxy: proxy.map(|p| p.into_string()),
         })
     }
 }

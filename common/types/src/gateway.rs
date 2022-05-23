@@ -1,8 +1,54 @@
 use crate::currency::MajorCurrencyAmount;
 use crate::error::TypesError;
-use mixnet_contract_common::{Addr, Gateway, GatewayBond as MixnetContractGatewayBond};
+use mixnet_contract_common::{
+    Addr, Gateway as MixnetContractGateway, GatewayBond as MixnetContractGatewayBond,
+};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(
+    test,
+    ts(
+        export,
+        export_to = "../../ts-packages/types/src/types/rust/Gateway.ts"
+    )
+)]
+#[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize, JsonSchema)]
+pub struct Gateway {
+    pub host: String,
+    pub mix_port: u16,
+    pub clients_port: u16,
+    pub location: String,
+    pub sphinx_key: String,
+    /// Base58 encoded ed25519 EdDSA public key of the gateway used to derive shared keys with clients
+    pub identity_key: String,
+    pub version: String,
+}
+
+impl From<MixnetContractGateway> for Gateway {
+    fn from(value: MixnetContractGateway) -> Self {
+        let MixnetContractGateway {
+            host,
+            mix_port,
+            clients_port,
+            location,
+            sphinx_key,
+            identity_key,
+            version,
+        } = value;
+
+        Gateway {
+            host,
+            mix_port,
+            clients_port,
+            location,
+            sphinx_key,
+            identity_key,
+            version,
+        }
+    }
+}
 
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[cfg_attr(
@@ -16,9 +62,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize, JsonSchema)]
 pub struct GatewayBond {
     pub pledge_amount: MajorCurrencyAmount,
+    #[cfg_attr(test, ts(type = "String"))]
     pub owner: Addr,
     pub block_height: u64,
     pub gateway: Gateway,
+    #[cfg_attr(test, ts(optional, type = "String"))]
     pub proxy: Option<Addr>,
 }
 
@@ -54,7 +102,7 @@ impl TryFrom<MixnetContractGatewayBond> for GatewayBond {
             pledge_amount,
             owner,
             block_height,
-            gateway,
+            gateway: gateway.into(),
             proxy,
         })
     }

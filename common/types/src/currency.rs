@@ -52,7 +52,7 @@ impl TryFrom<CosmosDenom> for CurrencyDenom {
 
     fn try_from(value: CosmosDenom) -> Result<Self, Self::Error> {
         let mut denom = value.to_string();
-        if denom.starts_with("u") {
+        if denom.starts_with('u') {
             denom = denom[1..].to_string();
         }
         match CurrencyDenom::from_str(&denom) {
