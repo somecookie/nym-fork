@@ -1,18 +1,15 @@
 use crate::currency::MajorCurrencyAmount;
 use crate::error::TypesError;
 use mixnet_contract_common::{
-    Addr, Layer, MixNode as MixnetContractMixNode, MixNodeBond as MixnetContractMixNodeBond,
+    MixNode as MixnetContractMixNode, MixNodeBond as MixnetContractMixNodeBond,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
-    ts(
-        export,
-        export_to = "../../../ts-packages/types/src/types/rust/Mixnode.ts"
-    )
+    feature = "generate-ts",
+    ts(export_to = "ts-packages/types/src/types/rust/Mixnode.ts")
 )]
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize, JsonSchema)]
 pub struct MixNode {
@@ -53,14 +50,10 @@ impl From<MixnetContractMixNode> for MixNode {
     }
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/MixNodeBond.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/MixNodeBond.ts")
 )]
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize, JsonSchema)]
 pub struct MixNodeBond {
@@ -120,7 +113,7 @@ impl TryFrom<MixnetContractMixNodeBond> for MixNodeBond {
             pledge_amount,
             total_delegation,
             owner: owner.into_string(),
-            layer: layer.to_string(),
+            layer: layer.into(),
             block_height,
             mix_node: mix_node.into(),
             proxy: proxy.map(|p| p.into_string()),

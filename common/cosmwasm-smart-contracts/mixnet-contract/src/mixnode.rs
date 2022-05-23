@@ -17,10 +17,7 @@ use std::fmt::Display;
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../../ts-packages/types/src/types/rust/RewardedSetNodeStatus.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/RewardedSetNodeStatus.ts")
 )]
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, JsonSchema, PartialEq)]
 pub enum RewardedSetNodeStatus {

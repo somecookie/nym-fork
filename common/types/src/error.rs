@@ -52,6 +52,8 @@ pub enum TypesError {
     InvalidDenom(String),
     #[error("Gateway bond is not valid")]
     InvalidGatewayBond(),
+    #[error("Invalid delegations")]
+    DelegationsInvalid,
 }
 
 impl Serialize for TypesError {

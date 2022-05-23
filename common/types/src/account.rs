@@ -5,10 +5,7 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/Account.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/Account.ts")
 )]
 #[derive(Serialize, Deserialize, JsonSchema)]
 pub struct Account {
@@ -30,10 +27,7 @@ impl Account {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/AccountWithMnemonic.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/AccountWithMnemonic.ts")
 )]
 #[derive(Serialize, Deserialize)]
 pub struct AccountWithMnemonic {
@@ -44,10 +38,7 @@ pub struct AccountWithMnemonic {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/Balance.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/Balance.ts")
 )]
 #[derive(Serialize, Deserialize)]
 pub struct Balance {

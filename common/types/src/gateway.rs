@@ -1,18 +1,15 @@
 use crate::currency::MajorCurrencyAmount;
 use crate::error::TypesError;
 use mixnet_contract_common::{
-    Addr, Gateway as MixnetContractGateway, GatewayBond as MixnetContractGatewayBond,
+    Gateway as MixnetContractGateway, GatewayBond as MixnetContractGatewayBond,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
-    test,
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/Gateway.ts"
-    )
+    feature = "generate-ts",
+    ts(export_to = "ts-packages/types/src/types/rust/Gateway.ts")
 )]
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize, JsonSchema)]
 pub struct Gateway {
@@ -50,14 +47,10 @@ impl From<MixnetContractGateway> for Gateway {
     }
 }
 
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/GatewayBond.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/GatewayBond.ts")
 )]
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize, JsonSchema)]
 pub struct GatewayBond {

@@ -1,31 +1,16 @@
 use crate::error::BackendError;
 use crate::nymd_client;
 use crate::state::State;
-use crate::utils::DelegationResult;
-use crate::utils::{from_contract_delegation_events, DelegationEvent};
 use cosmwasm_std::{Coin as CosmWasmCoin, Uint128};
 use mixnet_contract_common::IdentityKey;
 use nym_types::currency::{CurrencyDenom, MajorCurrencyAmount};
-use nym_types::delegation::Delegation;
+use nym_types::delegation::{
+  from_contract_delegation_events, Delegation, DelegationEvent, DelegationResult,
+  DelegationsSummaryResponse,
+};
 use nym_types::error::TypesError;
-use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
-
-#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
-#[cfg_attr(
-  feature = "generate-ts",
-  ts(
-    export,
-    export_to = "../../ts-packages/types/src/types/rust/DelegationSummaryResponse.ts"
-  )
-)]
-#[derive(Deserialize, Serialize)]
-pub struct DelegationsSummaryResponse {
-  pub delegations: Vec<Delegation>,
-  pub total_delegations: MajorCurrencyAmount,
-  pub total_rewards: MajorCurrencyAmount,
-}
 
 #[tauri::command]
 pub async fn get_pending_delegation_events(
@@ -35,7 +20,10 @@ pub async fn get_pending_delegation_events(
     .get_pending_delegation_events(nymd_client!(state).address().to_string(), None)
     .await?;
 
-  from_contract_delegation_events(events)
+  match from_contract_delegation_events(events) {
+    Ok(res) => Ok(res),
+    Err(e) => Err(e.into()),
+  }
 }
 
 #[tauri::command]

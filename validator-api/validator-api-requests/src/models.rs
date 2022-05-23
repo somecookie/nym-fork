@@ -10,10 +10,7 @@ use std::fmt;
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/MixnodeStatus.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/MixnodeStatus.ts")
 )]
 #[serde(rename_all = "snake_case")]
 pub enum MixnodeStatus {
@@ -33,10 +30,7 @@ impl MixnodeStatus {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/CoreNodeStatusResponse.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/CoreNodeStatusResponse.ts")
 )]
 pub struct CoreNodeStatusResponse {
     pub identity: String,
@@ -47,10 +41,7 @@ pub struct CoreNodeStatusResponse {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/MixnodeStatusResponse.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/MixnodeStatusResponse.ts")
 )]
 pub struct MixnodeStatusResponse {
     pub status: MixnodeStatus,
@@ -76,10 +67,7 @@ pub struct UptimeResponse {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/StakeSaturationResponse.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/StakeSaturationResponse.ts")
 )]
 pub struct StakeSaturationResponse {
     pub saturation: f32,
@@ -90,10 +78,7 @@ pub struct StakeSaturationResponse {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/SelectionChance.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/SelectionChance.ts")
 )]
 pub enum SelectionChance {
     VeryHigh,
@@ -131,10 +116,7 @@ impl fmt::Display for SelectionChance {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/InclusionProbabilityResponse.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/InclusionProbabilityResponse.ts")
 )]
 pub struct InclusionProbabilityResponse {
     pub in_active: SelectionChance,

@@ -3228,6 +3228,7 @@ dependencies = [
  "cosmwasm-std",
  "eyre",
  "itertools",
+ "log",
  "mixnet-contract-common",
  "reqwest",
  "schemars",

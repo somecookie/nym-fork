@@ -12,7 +12,6 @@ use validator_client::nymd::fee::helpers::Operation;
 mod config;
 mod error;
 mod menu;
-mod network;
 mod network_config;
 mod operations;
 mod platform_constants;
