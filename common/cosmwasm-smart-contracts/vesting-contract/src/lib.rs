@@ -15,10 +15,7 @@ pub fn one_ucoin() -> Coin {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../../ts-packages/types/src/types/rust/Period.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/Period.ts")
 )]
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone, JsonSchema)]
 pub enum Period {

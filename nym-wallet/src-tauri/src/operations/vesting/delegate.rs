@@ -1,9 +1,8 @@
 use crate::error::BackendError;
 use crate::nymd_client;
 use crate::state::State;
-use crate::utils::DelegationResult;
-use crate::utils::{from_contract_delegation_events, DelegationEvent};
 use nym_types::currency::MajorCurrencyAmount;
+use nym_types::delegation::{from_contract_delegation_events, DelegationEvent, DelegationResult};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use validator_client::nymd::VestingSigningClient;
@@ -22,7 +21,10 @@ pub async fn get_pending_vesting_delegation_events(
       Some(vesting_contract.to_string()),
     )
     .await?;
-  from_contract_delegation_events(events)
+  match from_contract_delegation_events(events) {
+    Ok(res) => Ok(res),
+    Err(e) => Err(e.into()),
+  }
 }
 
 #[tauri::command]

@@ -16,10 +16,7 @@ use validator_client::nymd::{CosmosCoin, GasPrice};
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/CurrencyDenom.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/CurrencyDenom.ts")
 )]
 #[cfg_attr(test, ts(rename_all = "UPPERCASE"))]
 #[derive(
@@ -64,10 +61,7 @@ impl TryFrom<CosmosDenom> for CurrencyDenom {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/CurrencyStringMajorAmount.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/CurrencyStringMajorAmount.ts")
 )]
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct MajorAmountString(String); // see https://github.com/Aleph-Alpha/ts-rs/issues/51 for exporting type aliases
@@ -75,10 +69,7 @@ pub struct MajorAmountString(String); // see https://github.com/Aleph-Alpha/ts-r
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../ts-packages/types/src/types/rust/Currency.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/Currency.ts")
 )]
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct MajorCurrencyAmount {

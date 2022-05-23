@@ -2956,6 +2956,7 @@ dependencies = [
  "cosmwasm-std",
  "eyre",
  "itertools",
+ "log",
  "mixnet-contract-common",
  "reqwest",
  "schemars",
@@ -2965,6 +2966,24 @@ dependencies = [
  "thiserror",
  "ts-rs",
  "url",
+ "validator-client",
+ "vesting-contract",
+ "vesting-contract-common",
+]
+
+[[package]]
+name = "nym-wallet-types"
+version = "1.0.0"
+dependencies = [
+ "config",
+ "cosmrs",
+ "cosmwasm-std",
+ "mixnet-contract-common",
+ "nym-types",
+ "serde",
+ "serde_json",
+ "strum 0.23.0",
+ "ts-rs",
  "validator-client",
  "vesting-contract",
  "vesting-contract-common",
@@ -2992,6 +3011,7 @@ dependencies = [
  "log",
  "mixnet-contract-common",
  "nym-types",
+ "nym-wallet-types",
  "once_cell",
  "pretty_env_logger",
  "rand 0.6.5",

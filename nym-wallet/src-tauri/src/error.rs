@@ -75,18 +75,10 @@ pub enum BackendError {
   ClientNotInitialized,
   #[error("No balance available for address {0}")]
   NoBalance(String),
-  #[error("{0} is not a valid denomination string")]
-  InvalidAmount(String),
-  #[error("{0} is not a valid amount string")]
-  InvalidDenom(String),
-  #[error("{0} is not a valid network denomination string")]
-  InvalidNetworkDenom(String),
   #[error("The provided network is not supported (yet)")]
   NetworkNotSupported(config::defaults::all::Network),
   #[error("Could not access the local data storage directory")]
   UnknownStorageDirectory,
-  #[error("No validator API URL configured")]
-  NoValidatorApiUrlConfigured,
   #[error("The wallet file already exists")]
   WalletFileAlreadyExists,
   #[error("The wallet file is not found")]
@@ -97,8 +89,6 @@ pub enum BackendError {
   IdAlreadyExistsInWallet,
   #[error("Adding a different password to the wallet not currently supported")]
   WalletDifferentPasswordDetected,
-  #[error("Invalid delegations")]
-  DelegationsInvalid,
 }
 
 impl Serialize for BackendError {

@@ -1,15 +1,17 @@
-use super::VestingAccountInfo;
-use crate::error::BackendError;
-use crate::nymd_client;
-use crate::state::State;
-use cosmwasm_std::Timestamp;
-use nym_types::currency::MajorCurrencyAmount;
 use std::sync::Arc;
+
+use cosmwasm_std::Timestamp;
 use tokio::sync::RwLock;
+
+use nym_types::currency::MajorCurrencyAmount;
+use nym_types::vesting::VestingAccountInfo;
+use nym_types::vesting::{OriginalVestingResponse, PledgeData};
 use validator_client::nymd::VestingQueryClient;
 use vesting_contract_common::Period;
 
-use super::{OriginalVestingResponse, PledgeData};
+use crate::error::BackendError;
+use crate::nymd_client;
+use crate::state::State;
 
 #[tauri::command]
 pub async fn locked_coins(

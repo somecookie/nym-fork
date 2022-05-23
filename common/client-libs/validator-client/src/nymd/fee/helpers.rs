@@ -10,10 +10,7 @@ use std::fmt;
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
-    ts(
-        export,
-        export_to = "../../../ts-packages/types/src/types/rust/Operation.ts"
-    )
+    ts(export_to = "ts-packages/types/src/types/rust/Operation.ts")
 )]
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub enum Operation {
