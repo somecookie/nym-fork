@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Box,
   Button,
-  Icon,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -104,8 +103,12 @@ export const DelegationsActionsMenu: React.FC<{
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+
+  const handleClose = () => setAnchorEl(null);
+
+  const handleActionSelect = (action: DelegationListItemActions) => {
+    handleClose();
+    onActionClick?.(action);
   };
 
   if (isPending) {
@@ -126,13 +129,23 @@ export const DelegationsActionsMenu: React.FC<{
         <MoreVertSharp />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <DelegationActionsMenuItem title="Delegate more" Icon={<Delegate />} onClick={handleClose} disabled={false} />
-        <DelegationActionsMenuItem title="Undelegate" Icon={<Undelegate />} onClick={handleClose} disabled={false} />
+        <DelegationActionsMenuItem
+          title="Delegate more"
+          Icon={<Delegate />}
+          onClick={() => handleActionSelect?.('delegate')}
+          disabled={false}
+        />
+        <DelegationActionsMenuItem
+          title="Undelegate"
+          Icon={<Undelegate />}
+          onClick={() => handleActionSelect?.('undelegate')}
+          disabled={false}
+        />
         <DelegationActionsMenuItem
           title="Compound"
           description="Add your rewards to this delegation"
           Icon={<Typography sx={{ pl: 1 }}>C</Typography>}
-          onClick={handleClose}
+          onClick={() => handleActionSelect?.('redeem')}
           disabled={disableRedeemingRewards}
         />
 
@@ -140,7 +153,7 @@ export const DelegationsActionsMenu: React.FC<{
           title="Redeem"
           description="Trasfer your rewards to your balance"
           Icon={<Typography>R</Typography>}
-          onClick={handleClose}
+          onClick={() => handleActionSelect?.('redeem')}
           disabled={disableRedeemingRewards}
         />
       </Menu>
