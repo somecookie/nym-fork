@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
-import { ClientContext } from '../../context/main';
 import { useSnackbar } from 'notistack';
-import { getInclusionProbability, getMixnodeStakeSaturation, getMixnodeStatus } from '../../requests';
 import { InclusionProbabilityResponse, MixnodeStatus } from '@nymproject/types';
+import { ClientContext } from '../../context/main';
+import { getInclusionProbability, getMixnodeStakeSaturation, getMixnodeStatus } from '../../requests';
 
 export const useSettingsState = (shouldUpdate: boolean) => {
   const [status, setStatus] = useState<MixnodeStatus>('not_found');
