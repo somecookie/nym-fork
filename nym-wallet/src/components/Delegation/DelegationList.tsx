@@ -152,9 +152,7 @@ export const DelegationList: React.FC<{
                   </Tooltip>
                 </TableCell>
                 <TableCell>{item.delegationDate.toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <Currency majorAmount={{ amount: item.amount || '-', denom: 'NYM' }} />
-                </TableCell>
+                <TableCell>{item.amount}</TableCell>
                 <TableCell>{item.reward}</TableCell>
                 <TableCell>
                   {!item.profitMarginPercentage ? '-' : `${Math.round(item.profitMarginPercentage * 100000) / 1000}%`}
