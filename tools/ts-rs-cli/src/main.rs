@@ -1,3 +1,4 @@
+use std::path::Path;
 use ts_rs::TS;
 use walkdir::WalkDir;
 
@@ -85,6 +86,11 @@ fn main() {
     do_export!(AppEnv);
     do_export!(Network);
 
+    let dst_base = Path::new("../../");
+
+    println!();
+    println!("Moving output files into place...");
+
     for file in WalkDir::new("./")
         .into_iter()
         .filter_map(|file| file.ok())
@@ -98,7 +104,32 @@ fn main() {
                 && f.file_type().is_file()
         })
     {
-        println!("{}", file.path().display());
+        // construct the source and destination paths that can be used to replace the output file
+        let src = file.path();
+        let dst = dst_base.join(src);
+        let dst_directory = dst.parent().expect("Could not get parent directory");
+
+        if !dst_directory.exists() {
+            if let Err(e) = std::fs::create_dir_all(dst_directory) {
+                // show an error and move onto next file
+                println!("❌ {}: {}", file.path().display(), e);
+                continue;
+            }
+        }
+
+        match std::fs::copy(src, dst.clone()) {
+            Ok(_) => match std::fs::canonicalize(dst) {
+                Ok(res) => {
+                    println!("✅ {}  =>  {}", file.path().display(), res.display());
+                }
+                Err(e) => {
+                    println!("❌ {}: {}", file.path().display(), e);
+                }
+            },
+            Err(e) => {
+                println!("❌ {}: {}", file.path().display(), e);
+            }
+        }
     }
 
     println!();
