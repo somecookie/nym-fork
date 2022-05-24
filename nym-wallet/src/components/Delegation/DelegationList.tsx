@@ -15,9 +15,9 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { CopyToClipboard } from '@nymproject/react/clipboard/CopyToClipboard';
+import { Currency } from '@nymproject/react/currency/Currency';
 import { DelegationListItemActions, DelegationsActionsMenu } from './DelegationActions';
 import { DelegateListItem } from './types';
-import { Currency } from '@nymproject/react/currency/Currency';
 
 type Order = 'asc' | 'desc';
 

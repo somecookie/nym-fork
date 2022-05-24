@@ -2,7 +2,8 @@ import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { TLoginType } from 'src/pages/sign-in/types';
-import { Account, AppEnv, Network, TMixnodeBondDetails } from '@nymproject/types';
+import { Account, MixNodeBond } from '@nymproject/types';
+import { AppEnv, Network } from 'src/types';
 import { TUseuserBalance, useGetBalance } from '../hooks/useGetBalance';
 import {
   getMixnodeBondDetails,
@@ -29,7 +30,7 @@ type TClientContext = {
   mode: 'light' | 'dark';
   appEnv?: AppEnv;
   clientDetails?: Account;
-  mixnodeDetails?: TMixnodeBondDetails | null;
+  mixnodeDetails?: MixNodeBond | null;
   userBalance: TUseuserBalance;
   showAdmin: boolean;
   showSettings: boolean;
@@ -55,7 +56,7 @@ export const ClientContext = createContext({} as TClientContext);
 export const ClientContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [appEnv, setAppEnv] = useState<AppEnv>();
   const [clientDetails, setClientDetails] = useState<Account>();
-  const [mixnodeDetails, setMixnodeDetails] = useState<TMixnodeBondDetails | null>();
+  const [mixnodeDetails, setMixnodeDetails] = useState<MixNodeBond | null>(null);
   const [network, setNetwork] = useState<Network | undefined>();
   const [showAdmin, setShowAdmin] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -79,7 +80,7 @@ export const ClientContextProvider = ({ children }: { children: React.ReactNode 
   };
 
   const getBondDetails = async () => {
-    setMixnodeDetails(undefined);
+    setMixnodeDetails(null);
     try {
       const mixnode = await getMixnodeBondDetails();
       setMixnodeDetails(mixnode);
@@ -130,7 +131,7 @@ export const ClientContextProvider = ({ children }: { children: React.ReactNode 
     setNetwork(undefined);
     setError(undefined);
     setIsLoading(false);
-    setMixnodeDetails(undefined);
+    setMixnodeDetails(null);
     await signOut();
     enqueueSnackbar('Successfully logged out', { variant: 'success' });
   };

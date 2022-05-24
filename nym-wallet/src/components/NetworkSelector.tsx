@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Button, List, ListItem, ListItemIcon, ListItemText, ListSubheader, Popover } from '@mui/material';
 import { ArrowDropDown, CheckSharp } from '@mui/icons-material';
-import { Network } from '@nymproject/types';
+import { Network } from 'src/types';
 import { ClientContext } from '../context/main';
 import { config } from '../config';
 

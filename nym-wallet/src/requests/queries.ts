@@ -1,7 +1,5 @@
 import {
-  TMixnodeBondDetails,
   TPagedDelegations,
-  Epoch,
   DelegationEvent,
   StakeSaturationResponse,
   MixnodeStatusResponse,
@@ -9,7 +7,9 @@ import {
   InclusionProbabilityResponse,
   Balance,
   MajorCurrencyAmount,
+  MixNodeBond,
 } from '@nymproject/types';
+import { Epoch } from 'src/types';
 import { invokeWrapper } from './wrapper';
 
 export const getReverseMixDelegations = async () =>
@@ -23,7 +23,7 @@ export const getPendingDelegations = async () => invokeWrapper<DelegationEvent[]
 export const getPendingVestingDelegations = async () =>
   invokeWrapper<DelegationEvent[]>('get_pending_vesting_delegation_events');
 
-export const getMixnodeBondDetails = async () => invokeWrapper<TMixnodeBondDetails | null>('mixnode_bond_details');
+export const getMixnodeBondDetails = async () => invokeWrapper<MixNodeBond | null>('mixnode_bond_details');
 
 export const getMixnodeStakeSaturation = async (identity: string) =>
   invokeWrapper<StakeSaturationResponse>('mixnode_stake_saturation', { identity });

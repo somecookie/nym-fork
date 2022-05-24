@@ -78,7 +78,7 @@ export const DelegateBelowMinimum = () => {
         nodeUptimePercentage={99.28394}
         profitMarginPercentage={11.12334234}
         rewardInterval="weekly"
-        initialAmount={'0.1'}
+        initialAmount="0.1"
       />
     </>
   );

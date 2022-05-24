@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert, AlertTitle, Box, Button, CircularProgress, Grid, IconButton } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
-import { DelegationResult, Epoch, PendingUndelegate, TPagedDelegations } from '@nymproject/types';
-import { EnumRequestStatus, NymCard, RequestStatus } from '../../components';
+import { DelegationResult, PendingUndelegate, TPagedDelegations } from '@nymproject/types';
+import { Epoch } from 'src/types';
 import { UndelegateForm } from './UndelegateForm';
+import { EnumRequestStatus, NymCard, RequestStatus } from '../../components';
 import {
   getCurrentEpoch,
   getPendingDelegations,

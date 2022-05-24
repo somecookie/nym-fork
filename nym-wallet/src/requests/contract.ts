@@ -1,4 +1,4 @@
-import { TauriContractStateParams } from '@nymproject/types';
+import { TauriContractStateParams } from 'src/types';
 import { invokeWrapper } from './wrapper';
 
 export const getContractParams = async () => invokeWrapper<TauriContractStateParams>('get_contract_settings');

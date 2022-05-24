@@ -11,9 +11,9 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import { MoreVertSharp } from '@mui/icons-material';
 import { Delegate, Undelegate } from '../../svg-icons';
 import { DelegateListItemPending } from './types';
-import { MoreVertSharp } from '@mui/icons-material';
 
 export type DelegationListItemActions = 'delegate' | 'undelegate' | 'redeem';
 

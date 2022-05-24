@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Backdrop, Box, Button, CircularProgress, FormControl, Grid, Paper, Slide, TextField } from '@mui/material';
-import { TauriContractStateParams } from '@nymproject/types';
+import { TauriContractStateParams } from 'src/types';
 
 import { ClientContext } from '../../context/main';
 import { NymCard } from '../../components';
