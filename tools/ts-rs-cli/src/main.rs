@@ -5,7 +5,9 @@ use walkdir::WalkDir;
 use mixnet_contract_common::mixnode::RewardedSetNodeStatus;
 use nym_types::account::{Account, AccountWithMnemonic, Balance};
 use nym_types::currency::{CurrencyDenom, MajorAmountString, MajorCurrencyAmount};
-use nym_types::delegation::Delegation;
+use nym_types::delegation::{
+    Delegation, DelegationEvent, DelegationsSummaryResponse, PendingUndelegate,
+};
 use nym_types::gateway::{Gateway, GatewayBond};
 use nym_types::mixnode::{MixNode, MixNodeBond};
 use nym_types::transaction::{TauriTxResult, TransactionDetails};
@@ -58,6 +60,9 @@ fn main() {
     do_export!(MajorAmountString);
     do_export!(MajorCurrencyAmount);
     do_export!(Delegation);
+    do_export!(DelegationEvent);
+    do_export!(DelegationsSummaryResponse);
+    do_export!(PendingUndelegate);
     do_export!(Gateway);
     do_export!(GatewayBond);
     do_export!(MixNode);
