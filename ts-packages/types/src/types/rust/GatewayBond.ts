@@ -3,8 +3,8 @@ import type { MajorCurrencyAmount } from './Currency';
 
 export interface GatewayBond {
   pledge_amount: MajorCurrencyAmount;
-  owner: String;
+  owner: string;
   block_height: bigint;
   gateway: Gateway;
-  proxy?: String;
+  proxy: string | null;
 }

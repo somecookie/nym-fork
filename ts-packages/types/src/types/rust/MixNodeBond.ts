@@ -4,10 +4,10 @@ import type { MixNode } from './Mixnode';
 export interface MixNodeBond {
   pledge_amount: MajorCurrencyAmount;
   total_delegation: MajorCurrencyAmount;
-  owner: String;
-  layer: String;
+  owner: string;
+  layer: string;
   block_height: bigint;
   mix_node: MixNode;
-  proxy?: String;
+  proxy: string | null;
   accumulated_rewards: MajorCurrencyAmount | null;
 }

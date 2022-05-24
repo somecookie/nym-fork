@@ -1,9 +1,9 @@
 import type { MajorCurrencyAmount } from './Currency';
 
 export interface Delegation {
-  owner: String;
+  owner: string;
   node_identity: string;
   amount: MajorCurrencyAmount;
   block_height: bigint;
-  proxy?: String;
+  proxy: string | null;
 }

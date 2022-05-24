@@ -11,6 +11,7 @@ export const validateKey = (key?: string, bytesLength: number = 32): boolean => 
     // of length 32
     return bytes.length === bytesLength;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(e);
     return false;
   }

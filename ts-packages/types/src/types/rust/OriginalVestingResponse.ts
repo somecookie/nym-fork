@@ -1,4 +1,4 @@
-import { MajorCurrencyAmount } from './Currency';
+import type { MajorCurrencyAmount } from './Currency';
 
 export interface OriginalVestingResponse {
   amount: MajorCurrencyAmount;

@@ -32,5 +32,3 @@ export type TMixnodeBondDetails = {
   mix_node: MixNode;
   proxy: any;
 };
-
-export type Period = 'Before' | { In: number } | 'After';
