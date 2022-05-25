@@ -62,6 +62,7 @@ pub struct DelegationWithEverything {
     pub block_height: u64,
     pub delegated_on_iso_datetime: String,
     pub profit_margin_percent: Option<u8>,
+    pub avg_uptime_percent: Option<u8>,
     pub stake_saturation: Option<f32>,
     pub proxy: Option<String>, // proxy address used to delegate the funds on behalf of anouther address
     pub accumulated_rewards: Option<MajorCurrencyAmount>,

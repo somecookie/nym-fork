@@ -137,6 +137,16 @@ pub async fn get_all_mix_delegations(
       None => None,
     };
 
+    let avg_uptime_percent = match mixnode {
+      Some(m) => Some(
+        api_client!(state)
+          .get_mixnode_avg_uptime(&m.mix_node.identity_key)
+          .await?
+          .avg_uptime,
+      ),
+      None => None,
+    };
+
     let timestamp = nymd_client!(state)
       .get_block_timestamp(Some(d.block_height as u32))
       .await?;
@@ -154,6 +164,7 @@ pub async fn get_all_mix_delegations(
       profit_margin_percent: extras.as_ref().map(|e| e.profit_margin_percent),
       total_delegation: extras.as_ref().map(|e| e.total_delegation.clone()),
       pledge_amount: extras.as_ref().map(|e| e.pledge_amount.clone()),
+      avg_uptime_percent,
     })
   }
 
