@@ -43,10 +43,8 @@ pub enum CurrencyDenom {
     Nyxt,
 }
 
-impl TryFrom<CosmosDenom> for CurrencyDenom {
-    type Error = TypesError;
-
-    fn try_from(value: CosmosDenom) -> Result<Self, Self::Error> {
+impl CurrencyDenom {
+    pub fn parse(value: &str) -> Result<CurrencyDenom, TypesError> {
         let mut denom = value.to_string();
         if denom.starts_with('u') {
             denom = denom[1..].to_string();
@@ -55,6 +53,14 @@ impl TryFrom<CosmosDenom> for CurrencyDenom {
             Ok(res) => Ok(res),
             Err(_e) => Err(TypesError::InvalidDenom(value.to_string())),
         }
+    }
+}
+
+impl TryFrom<CosmosDenom> for CurrencyDenom {
+    type Error = TypesError;
+
+    fn try_from(value: CosmosDenom) -> Result<Self, Self::Error> {
+        CurrencyDenom::parse(&value.to_string())
     }
 }
 
