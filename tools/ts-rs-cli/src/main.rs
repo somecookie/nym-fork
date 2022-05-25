@@ -6,7 +6,8 @@ use mixnet_contract_common::mixnode::RewardedSetNodeStatus;
 use nym_types::account::{Account, AccountWithMnemonic, Balance};
 use nym_types::currency::{CurrencyDenom, MajorAmountString, MajorCurrencyAmount};
 use nym_types::delegation::{
-    Delegation, DelegationEvent, DelegationResult, DelegationsSummaryResponse, PendingUndelegate,
+    Delegation, DelegationEvent, DelegationResult, DelegationWithEverything,
+    DelegationsSummaryResponse, PendingUndelegate,
 };
 use nym_types::gateway::{Gateway, GatewayBond};
 use nym_types::mixnode::{MixNode, MixNodeBond};
@@ -60,6 +61,7 @@ fn main() {
     do_export!(MajorAmountString);
     do_export!(MajorCurrencyAmount);
     do_export!(Delegation);
+    do_export!(DelegationWithEverything);
     do_export!(DelegationEvent);
     do_export!(DelegationResult);
     do_export!(DelegationsSummaryResponse);

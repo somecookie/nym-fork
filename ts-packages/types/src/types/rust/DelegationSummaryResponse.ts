@@ -1,8 +1,8 @@
-import type { Delegation } from './Delegation';
+import type { DelegationWithEverything } from './DelegationWithEverything';
 import type { MajorCurrencyAmount } from './Currency';
 
 export interface DelegationsSummaryResponse {
-  delegations: Array<Delegation>;
+  delegations: Array<DelegationWithEverything>;
   total_delegations: MajorCurrencyAmount;
   total_rewards: MajorCurrencyAmount;
 }

@@ -6,6 +6,7 @@ export * from './Currency';
 export * from './CurrencyDenom';
 export * from './CurrencyStringMajorAmount';
 export * from './Delegation';
+export * from './DelegationWithEverything';
 export * from './DelegationResult';
 export * from './DelegationEvent';
 export * from './DelegationSummaryResponse';
