@@ -1,9 +1,8 @@
 import React, { FC, useContext, useState } from 'react';
-import { Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Link, Paper, Stack, Typography } from '@mui/material';
 import { DelegationWithEverything } from '@nymproject/types';
 import { ClientContext } from 'src/context/main';
 import { RewardsSummary } from '../../components/Rewards/RewardsSummary';
-import { Delegations } from '../../components/Delegation/Delegations';
 import { useDelegationContext, DelegationContextProvider } from '../../context/delegations';
 import { RewardsContextProvider, useRewardsContext } from '../../context/rewards';
 import { DelegateModal } from '../../components/Delegation/DelegateModal';
@@ -11,6 +10,7 @@ import { UndelegateModal } from '../../components/Delegation/UndelegateModal';
 import { DelegationListItemActions } from '../../components/Delegation/DelegationActions';
 import { RedeemModal } from '../../components/Rewards/RedeemModal';
 import { DelegationModal, DelegationModalProps } from '../../components/Delegation/DelegationModal';
+import { DelegationList } from 'src/components/Delegation/DelegationList';
 
 const explorerUrl = 'https://sandbox-explorer.nymtech.net';
 
@@ -222,6 +222,25 @@ export const Delegation: FC = () => {
         <Stack spacing={5}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="h6">Delegations</Typography>
+            <Link
+              href={`${explorerUrl}/network-components/mixnodes/`}
+              target="_blank"
+              rel="noreferrer"
+              underline="hover"
+              sx={{ color: 'primary.main', textDecorationColor: 'primary.main' }}
+            >
+              <Typography color="primary.main" variant="body2">
+                Network Explorer
+              </Typography>
+            </Link>
+          </Box>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <RewardsSummary
+              isLoading={isLoadingDelegations || isLoadingRewards}
+              totalDelegation={totalDelegations}
+              totalRewards={totalRewards}
+              onClickRedeemAll={() => setShowRedeemAllRewardsModal(true)}
+            />
             <Button
               variant="contained"
               disableElevation
@@ -231,18 +250,11 @@ export const Delegation: FC = () => {
               New Delegation
             </Button>
           </Box>
-          <RewardsSummary
-            isLoading={isLoadingDelegations || isLoadingRewards}
-            totalDelegation={totalDelegations}
-            totalRewards={totalRewards}
-            onClickRedeemAll={() => setShowRedeemAllRewardsModal(true)}
-          />
-          <Delegations
+          <DelegationList
+            explorerUrl={explorerUrl}
             isLoading={isLoadingDelegations}
             items={delegations}
-            explorerUrl={explorerUrl}
-            onShowNewDelegation={() => setShowNewDelegationModal(true)}
-            onDelegationItemActionClick={handleDelegationItemActionClick}
+            onItemActionClick={handleDelegationItemActionClick}
           />
         </Stack>
       </Paper>

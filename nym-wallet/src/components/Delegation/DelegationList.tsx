@@ -17,6 +17,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { CopyToClipboard } from '@nymproject/react/clipboard/CopyToClipboard';
 import { DelegationWithEverything } from '@nymproject/types';
 import { DelegationListItemActions, DelegationsActionsMenu } from './DelegationActions';
+import { format } from 'date-fns';
 
 type Order = 'asc' | 'desc';
 
@@ -151,23 +152,19 @@ export const DelegationList: React.FC<{
                     </Link>
                   </Tooltip>
                 </TableCell>
-                <TableCell>{new Date(item.delegated_on_iso_datetime).toDateString()}</TableCell>
+                <TableCell>{format(new Date(item.delegated_on_iso_datetime), 'dd/MM/yyyy')}</TableCell>
                 <TableCell>{`${item.amount.amount} ${item.amount.denom}`}</TableCell>
                 <TableCell>
                   {!item.accumulated_rewards
                     ? '-'
                     : `${item.accumulated_rewards.amount} ${item.accumulated_rewards.denom}`}
                 </TableCell>
-                <TableCell>
-                  {!item.profit_margin_percent ? '-' : `${Math.round(item.profit_margin_percent * 100000) / 1000}%`}
-                </TableCell>
+                <TableCell>{!item.profit_margin_percent ? '-' : `${item.profit_margin_percent}%`}</TableCell>
                 <TableCell>
                   {!item.stake_saturation ? '-' : `${Math.round(item.stake_saturation * 100000) / 1000}%`}
                 </TableCell>
-                <TableCell>
-                  {!item.avg_uptime_percent ? '-' : `${Math.round(item.avg_uptime_percent * 100000) / 1000}%`}
-                </TableCell>
-                <TableCell>
+                <TableCell>{!item.avg_uptime_percent ? '-' : `${item.avg_uptime_percent}%`}</TableCell>
+                <TableCell width={100} align="right">
                   <DelegationsActionsMenu
                     isPending={undefined}
                     onActionClick={(action) => (onItemActionClick ? onItemActionClick(item, action) : undefined)}
