@@ -1,12 +1,12 @@
 use crate::error::BackendError;
-use crate::nymd_client;
 use crate::state::State;
+use crate::{api_client, nymd_client};
 use cosmwasm_std::{Coin as CosmWasmCoin, Uint128};
-use mixnet_contract_common::IdentityKey;
+use mixnet_contract_common::{IdentityKey, MixNodeBond};
 use nym_types::currency::{CurrencyDenom, MajorCurrencyAmount};
 use nym_types::delegation::{
   from_contract_delegation_events, Delegation, DelegationEvent, DelegationResult,
-  DelegationsSummaryResponse,
+  DelegationWithEverything, DelegationsSummaryResponse,
 };
 use nym_types::error::TypesError;
 use std::sync::Arc;
@@ -58,23 +58,106 @@ pub async fn undelegate_from_mixnode(
   ))
 }
 
+pub struct MixNodeExtras {
+  pub total_delegation: MajorCurrencyAmount,
+  pub pledge_amount: MajorCurrencyAmount,
+  pub profit_margin_percent: u8,
+  pub accumulated_rewards: Option<MajorCurrencyAmount>,
+}
+
+impl MixNodeExtras {
+  pub fn from_mixnode_bond(mixnode: &MixNodeBond) -> Result<MixNodeExtras, TypesError> {
+    let total_delegation: MajorCurrencyAmount = mixnode.total_delegation.clone().try_into()?;
+    let pledge_amount = mixnode.pledge_amount.clone().try_into()?;
+    let profit_margin_percent = mixnode.mix_node.profit_margin_percent;
+    let accumulated_rewards = mixnode.accumulated_rewards.and_then(|r| {
+      MajorCurrencyAmount::from_minor_uint128_and_denom(r, &mixnode.total_delegation.denom).ok()
+    });
+
+    Ok(MixNodeExtras {
+      total_delegation,
+      pledge_amount,
+      profit_margin_percent,
+      accumulated_rewards,
+    })
+  }
+}
+
+impl TryInto<MixNodeExtras> for MixNodeBond {
+  type Error = TypesError;
+
+  fn try_into(self) -> Result<MixNodeExtras, Self::Error> {
+    MixNodeExtras::from_mixnode_bond(&self)
+  }
+}
+
 #[tauri::command]
 pub async fn get_all_mix_delegations(
   state: tauri::State<'_, Arc<RwLock<State>>>,
-) -> Result<Vec<Delegation>, BackendError> {
+) -> Result<Vec<DelegationWithEverything>, BackendError> {
   let delegations = nymd_client!(state)
     .get_delegator_delegations_paged(nymd_client!(state).address().to_string(), None, None) // get all delegations, ignoring paging
     .await?
     .delegations;
 
-  match delegations
+  let delegations = delegations
     .into_iter()
     .map(|d| d.try_into())
-    .collect::<Result<Vec<Delegation>, TypesError>>()
-  {
-    Ok(res) => Ok(res),
-    Err(e) => Err(e.into()),
+    .collect::<Result<Vec<Delegation>, TypesError>>()?;
+
+  let mut with_everything: Vec<DelegationWithEverything> = vec![];
+
+  for d in delegations {
+    let Delegation {
+      owner,
+      node_identity,
+      amount,
+      block_height,
+      proxy,
+    } = d;
+
+    let mixnode_response = nymd_client!(state)
+      .get_mixnodes_paged(Some(node_identity.to_string()), Some(1))
+      .await?;
+
+    let mixnode = mixnode_response.nodes.first();
+
+    let extras: Option<MixNodeExtras> = match mixnode {
+      Some(m) => MixNodeExtras::from_mixnode_bond(m).ok(),
+      None => None,
+    };
+
+    let stake_saturation = match mixnode {
+      Some(m) => Some(
+        api_client!(state)
+          .get_mixnode_stake_saturation(&m.mix_node.identity_key)
+          .await?
+          .saturation,
+      ),
+      None => None,
+    };
+
+    let timestamp = nymd_client!(state)
+      .get_block_timestamp(Some(d.block_height as u32))
+      .await?;
+    let delegated_on_iso_datetime = timestamp.to_rfc3339();
+
+    with_everything.push(DelegationWithEverything {
+      owner: owner.to_string(),
+      node_identity: owner.to_string(),
+      amount: amount.clone(),
+      block_height,
+      proxy: proxy.clone(),
+      delegated_on_iso_datetime,
+      stake_saturation,
+      accumulated_rewards: extras.as_ref().and_then(|e| e.accumulated_rewards.clone()),
+      profit_margin_percent: extras.as_ref().map(|e| e.profit_margin_percent),
+      total_delegation: extras.as_ref().map(|e| e.total_delegation.clone()),
+      pledge_amount: extras.as_ref().map(|e| e.pledge_amount.clone()),
+    })
   }
+
+  Ok(with_everything)
 }
 
 #[tauri::command]
@@ -84,6 +167,7 @@ pub async fn get_delegator_rewards(
   proxy: Option<String>,
   state: tauri::State<'_, Arc<RwLock<State>>>,
 ) -> Result<Uint128, BackendError> {
+  // TODO: convert Uint128 in MajorCurrencyAmount
   Ok(
     nymd_client!(state)
       .get_delegator_rewards(address, mix_identity, proxy)

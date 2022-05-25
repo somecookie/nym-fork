@@ -50,6 +50,8 @@ pub enum TypesError {
     InvalidAmount(String),
     #[error("{0} is not a valid denomination string")]
     InvalidDenom(String),
+    #[error("Mixnode not found")]
+    MixnodeNotFound(),
     #[error("Gateway bond is not valid")]
     InvalidGatewayBond(),
     #[error("Invalid delegations")]

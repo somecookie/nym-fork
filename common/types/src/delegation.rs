@@ -50,6 +50,26 @@ impl TryFrom<MixnetContractDelegation> for Delegation {
 #[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
 #[cfg_attr(
     feature = "generate-ts",
+    ts(export_to = "ts-packages/types/src/types/rust/DelegationWithEverything.ts")
+)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, JsonSchema)]
+pub struct DelegationWithEverything {
+    pub owner: String,
+    pub node_identity: String,
+    pub amount: MajorCurrencyAmount,
+    pub total_delegation: Option<MajorCurrencyAmount>,
+    pub pledge_amount: Option<MajorCurrencyAmount>,
+    pub block_height: u64,
+    pub delegated_on_iso_datetime: String,
+    pub profit_margin_percent: Option<u8>,
+    pub stake_saturation: Option<f32>,
+    pub proxy: Option<String>, // proxy address used to delegate the funds on behalf of anouther address
+    pub accumulated_rewards: Option<MajorCurrencyAmount>,
+}
+
+#[cfg_attr(feature = "generate-ts", derive(ts_rs::TS))]
+#[cfg_attr(
+    feature = "generate-ts",
     ts(export_to = "ts-packages/types/src/types/rust/DelegationResult.ts")
 )]
 #[derive(Serialize, Deserialize)]
@@ -169,7 +189,7 @@ pub fn from_contract_delegation_events(
 )]
 #[derive(Deserialize, Serialize)]
 pub struct DelegationsSummaryResponse {
-    pub delegations: Vec<Delegation>,
+    pub delegations: Vec<DelegationWithEverything>,
     pub total_delegations: MajorCurrencyAmount,
     pub total_rewards: MajorCurrencyAmount,
 }
