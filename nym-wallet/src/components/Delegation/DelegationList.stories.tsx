@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentMeta } from '@storybook/react';
 
 import { DelegationList } from './DelegationList';
-import { DelegateListItem } from './types';
+import { DelegationWithEverything } from '@nymproject/types';
 
 export default {
   title: 'Delegation/Components/Delegation List',
@@ -11,38 +11,34 @@ export default {
 
 const explorerUrl = 'https://sandbox-explorer.nymtech.net/network-components/mixnodes';
 
-export const items: DelegateListItem[] = [
+export const items: DelegationWithEverything[] = [
   {
-    id: 'FiojKW7oY9WQmLCiYAsCA21tpowZHS6zcUoyYm319p6Z',
-    delegationDate: new Date(2021, 1, 1),
-    amount: '452 NYM',
-    uptimePercentage: 0.832,
-    profitMarginPercentage: 0.1122323949234,
-    reward: '0.001523434 NYM',
+    node_identity: 'FiojKW7oY9WQmLCiYAsCA21tpowZHS6zcUoyYm319p6Z',
+    delegated_on_iso_datetime: new Date(2021, 1, 1).toDateString(),
+    accumulated_rewards: { amount: '0.05', denom: 'NYM' },
+    amount: { amount: '10', denom: 'NYM' },
+    profit_margin_percent: 0.1122323949234,
+    owner: '',
+    block_height: BigInt(100),
+    stake_saturation: 0.5,
+    proxy: '',
+    avg_uptime_percent: 0.5,
+    total_delegation: { amount: '0', denom: 'NYM' },
+    pledge_amount: { amount: '0', denom: 'NYM' },
   },
   {
-    id: 'DT8S942S8AQs2zKHS9SVo1GyHmuca3pfL2uLhLksJ3D8',
-    delegationDate: new Date(2021, 1, 2),
-    amount: '1000000 NYM',
-    uptimePercentage: 0.2323423424,
-    profitMarginPercentage: 0.1,
-    reward: '234.234 NYM',
-    isPending: {
-      actionType: 'delegate',
-      blockHeight: 1234,
-    },
-  },
-  {
-    id: '6hn3z2yCQ3KP8XyqMRMV4c6DvYWG1vvrAWpgkxe1CV9C',
-    delegationDate: new Date(2021, 1, 3),
-    amount: '1 NYM',
-    uptimePercentage: 1.0,
-    profitMarginPercentage: 0.11,
-  },
-  {
-    id: '6hn3z2yCQ3KP8XyqMRMV4c6DvYWG1vvrAWpgkxe1CV9C',
-    delegationDate: new Date(2021, 1, 3),
-    amount: '1 NYM',
+    node_identity: 'DT8S942S8AQs2zKHS9SVo1GyHmuca3pfL2uLhLksJ3D8',
+    accumulated_rewards: { amount: '0.1', denom: 'NYM' },
+    amount: { amount: '100', denom: 'NYM' },
+    delegated_on_iso_datetime: new Date(2021, 1, 2).toDateString(),
+    profit_margin_percent: 0.89,
+    owner: '',
+    block_height: BigInt(4000),
+    stake_saturation: 0.5,
+    proxy: '',
+    avg_uptime_percent: 0.1,
+    total_delegation: { amount: '0', denom: 'NYM' },
+    pledge_amount: { amount: '0', denom: 'NYM' },
   },
 ];
 

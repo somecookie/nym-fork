@@ -1,15 +1,15 @@
 import React from 'react';
 import { Box, Button, Link, Stack, Typography } from '@mui/material';
-import { DelegateListItem } from './types';
+import { DelegationWithEverything } from '@nymproject/types';
 import { DelegationList } from './DelegationList';
 import { DelegationListItemActions } from './DelegationActions';
 
 export const Delegations: React.FC<{
   isLoading?: boolean;
-  items?: DelegateListItem[];
+  items?: DelegationWithEverything[];
   explorerUrl: string;
   onShowNewDelegation?: () => void;
-  onDelegationItemActionClick?: (item: DelegateListItem, action: DelegationListItemActions) => void;
+  onDelegationItemActionClick?: (item: DelegationWithEverything, action: DelegationListItemActions) => void;
 }> = ({ isLoading, items, explorerUrl, onDelegationItemActionClick }) => (
   <>
     <DelegationList

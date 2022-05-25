@@ -15,32 +15,32 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { CopyToClipboard } from '@nymproject/react/clipboard/CopyToClipboard';
-import { Currency } from '@nymproject/react/currency/Currency';
+import { DelegationWithEverything } from '@nymproject/types';
 import { DelegationListItemActions, DelegationsActionsMenu } from './DelegationActions';
-import { DelegateListItem } from './types';
 
 type Order = 'asc' | 'desc';
 
 interface EnhancedTableProps {
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof DelegateListItem) => void;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof DelegationWithEverything) => void;
   order: Order;
   orderBy: string;
 }
 
 interface HeadCell {
-  id: keyof DelegateListItem;
+  id: keyof DelegationWithEverything;
   label: string;
   sortable: boolean;
   disablePadding?: boolean;
 }
 
 const headCells: HeadCell[] = [
-  { id: 'id', label: 'Node ID', sortable: true },
-  { id: 'delegationDate', label: 'Delegated on', sortable: true },
+  { id: 'node_identity', label: 'Node ID', sortable: true },
+  { id: 'delegated_on_iso_datetime', label: 'Delegated on', sortable: true },
   { id: 'amount', label: 'Delegation', sortable: true },
-  { id: 'reward', label: 'Reward', sortable: true },
-  { id: 'profitMarginPercentage', label: 'Profit margin', sortable: true },
-  { id: 'uptimePercentage', label: 'Uptime', sortable: true },
+  { id: 'accumulated_rewards', label: 'Reward', sortable: true },
+  { id: 'profit_margin_percent', label: 'Profit margin', sortable: true },
+  { id: 'stake_saturation', label: 'Stake saturation', sortable: true },
+  { id: 'avg_uptime_percent', label: 'Uptime', sortable: true },
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -53,17 +53,17 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-function getComparator<Key extends keyof DelegateListItem>(
+function getComparator<Key extends keyof DelegationWithEverything>(
   order: Order,
   orderBy: Key,
-): (a: DelegateListItem, b: DelegateListItem) => number {
+): (a: DelegationWithEverything, b: DelegationWithEverything) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 const EnhancedTableHead: React.FC<EnhancedTableProps> = ({ order, orderBy, onRequestSort }) => {
-  const createSortHandler = (property: keyof DelegateListItem) => (event: React.MouseEvent<unknown>) => {
+  const createSortHandler = (property: keyof DelegationWithEverything) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property);
   };
 
@@ -101,14 +101,14 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = ({ order, orderBy, onReq
 
 export const DelegationList: React.FC<{
   isLoading?: boolean;
-  items?: DelegateListItem[];
-  onItemActionClick?: (item: DelegateListItem, action: DelegationListItemActions) => void;
+  items?: DelegationWithEverything[];
+  onItemActionClick?: (item: DelegationWithEverything, action: DelegationListItemActions) => void;
   explorerUrl: string;
 }> = ({ isLoading, items, onItemActionClick, explorerUrl }) => {
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof DelegateListItem>('delegationDate');
+  const [orderBy, setOrderBy] = React.useState<keyof DelegationWithEverything>('delegated_on_iso_datetime');
 
-  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof DelegateListItem) => {
+  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof DelegationWithEverything) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -121,21 +121,21 @@ export const DelegationList: React.FC<{
         <TableBody>
           {items?.length ? (
             items.sort(getComparator(order, orderBy)).map((item) => (
-              <TableRow key={item.id}>
+              <TableRow key={item.node_identity}>
                 <TableCell>
                   <CopyToClipboard
                     sx={{ fontSize: 16, mr: 1 }}
-                    value={item.id}
+                    value={item.node_identity}
                     tooltip={
                       <>
-                        Copy identity key <strong>{item.id}</strong> to clipboard
+                        Copy identity key <strong>{item.node_identity}</strong> to clipboard
                       </>
                     }
                   />
                   <Tooltip
                     title={
                       <>
-                        Click to view <strong>{item.id}</strong> in the Network Explorer
+                        Click to view <strong>{item.node_identity}</strong> in the Network Explorer
                       </>
                     }
                     placement="right"
@@ -143,34 +143,36 @@ export const DelegationList: React.FC<{
                   >
                     <Link
                       target="_blank"
-                      href={`${explorerUrl}/network-components/mixnode/${item.id}`}
+                      href={`${explorerUrl}/network-components/mixnode/${item.node_identity}`}
                       color="inherit"
                       underline="none"
                     >
-                      {item.id.slice(0, 6)}...{item.id.slice(-6)}
+                      {item.node_identity.slice(0, 6)}...{item.node_identity.slice(-6)}
                     </Link>
                   </Tooltip>
                 </TableCell>
-                <TableCell>{item.delegationDate.toLocaleDateString()}</TableCell>
-                <TableCell>{item.amount}</TableCell>
-                <TableCell>{item.reward}</TableCell>
+                <TableCell>{new Date(item.delegated_on_iso_datetime).toDateString()}</TableCell>
+                <TableCell>{`${item.amount.amount} ${item.amount.denom}`}</TableCell>
                 <TableCell>
-                  {!item.profitMarginPercentage ? '-' : `${Math.round(item.profitMarginPercentage * 100000) / 1000}%`}
+                  {!item.accumulated_rewards
+                    ? '-'
+                    : `${item.accumulated_rewards.amount} ${item.accumulated_rewards.denom}`}
                 </TableCell>
                 <TableCell>
-                  {!item.uptimePercentage ? '-' : `${Math.round(item.uptimePercentage * 100000) / 1000}%`}
+                  {!item.profit_margin_percent ? '-' : `${Math.round(item.profit_margin_percent * 100000) / 1000}%`}
+                </TableCell>
+                <TableCell>
+                  {!item.stake_saturation ? '-' : `${Math.round(item.stake_saturation * 100000) / 1000}%`}
+                </TableCell>
+                <TableCell>
+                  {!item.avg_uptime_percent ? '-' : `${Math.round(item.avg_uptime_percent * 100000) / 1000}%`}
                 </TableCell>
                 <TableCell>
                   <DelegationsActionsMenu
-                    isPending={item.isPending}
+                    isPending={undefined}
                     onActionClick={(action) => (onItemActionClick ? onItemActionClick(item, action) : undefined)}
-                    disableRedeemingRewards={!item.reward}
+                    disableRedeemingRewards={!item.accumulated_rewards}
                   />
-                  {/* <DelegationActions
-                    isPending={item.isPending}
-                    onActionClick={(action) => (onItemActionClick ? onItemActionClick(item, action) : undefined)}
-                    disableRedeemingRewards={!item.reward}
-                  /> */}
                 </TableCell>
               </TableRow>
             ))

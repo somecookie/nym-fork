@@ -1,5 +1,6 @@
 import React, { FC, useContext, useState } from 'react';
 import { Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { DelegationWithEverything } from '@nymproject/types';
 import { ClientContext } from 'src/context/main';
 import { RewardsSummary } from '../../components/Rewards/RewardsSummary';
 import { Delegations } from '../../components/Delegation/Delegations';
@@ -7,7 +8,6 @@ import { useDelegationContext, DelegationContextProvider } from '../../context/d
 import { RewardsContextProvider, useRewardsContext } from '../../context/rewards';
 import { DelegateModal } from '../../components/Delegation/DelegateModal';
 import { UndelegateModal } from '../../components/Delegation/UndelegateModal';
-import { DelegateListItem } from '../../components/Delegation/types';
 import { DelegationListItemActions } from '../../components/Delegation/DelegationActions';
 import { RedeemModal } from '../../components/Rewards/RedeemModal';
 import { DelegationModal, DelegationModalProps } from '../../components/Delegation/DelegationModal';
@@ -21,7 +21,7 @@ export const Delegation: FC = () => {
   const [showRedeemRewardsModal, setShowRedeemRewardsModal] = useState<boolean>(false);
   const [showRedeemAllRewardsModal, setShowRedeemAllRewardsModal] = useState<boolean>(false);
   const [confirmationModalProps, setConfirmationModalProps] = useState<DelegationModalProps | undefined>();
-  const [currentDelegationListActionItem, setCurrentDelegationListActionItem] = useState<DelegateListItem>();
+  const [currentDelegationListActionItem, setCurrentDelegationListActionItem] = useState<DelegationWithEverything>();
 
   const { clientDetails } = useContext(ClientContext);
   const { redeemAllRewards, redeemRewards, totalRewards, isLoading: isLoadingRewards } = useRewardsContext();
@@ -37,7 +37,7 @@ export const Delegation: FC = () => {
   // TODO: replace with real operation
   const getWalletBalance = async () => '1200 NYM';
 
-  const handleDelegationItemActionClick = (item: DelegateListItem, action: DelegationListItemActions) => {
+  const handleDelegationItemActionClick = (item: DelegationWithEverything, action: DelegationListItemActions) => {
     setCurrentDelegationListActionItem(item);
     // eslint-disable-next-line default-case
     switch (action) {
@@ -54,7 +54,7 @@ export const Delegation: FC = () => {
   };
 
   const handleNewDelegation = async (identityKey?: string, amount?: string) => {
-    if (!identityKey || !amount) {
+    if (!identityKey || !amount || !clientDetails) {
       setConfirmationModalProps({
         status: 'error',
         action: 'delegate',
@@ -70,16 +70,18 @@ export const Delegation: FC = () => {
     setCurrentDelegationListActionItem(undefined);
     try {
       const tx = await addDelegation({
-        id: identityKey,
-        amount,
-        delegationDate: new Date(),
-        profitMarginPercentage: 0.1,
-        reward: '1 NYM',
-        uptimePercentage: 0.99,
-        isPending: {
-          blockHeight: 1111,
-          actionType: 'delegate',
-        },
+        node_identity: identityKey,
+        amount: { amount, denom: clientDetails.denom },
+        delegated_on_iso_datetime: new Date().toDateString(),
+        profit_margin_percent: 0.1,
+        accumulated_rewards: { amount: '1', denom: 'NYM' },
+        owner: '',
+        block_height: BigInt(100),
+        stake_saturation: 0.5,
+        proxy: '',
+        total_delegation: { amount: '0', denom: 'NYM' },
+        pledge_amount: { amount: '0', denom: 'NYM' },
+        avg_uptime_percent: 0.1,
       });
       setConfirmationModalProps({
         status: 'success',
@@ -97,7 +99,7 @@ export const Delegation: FC = () => {
   };
 
   const handleDelegateMore = async (identityKey?: string, amount?: string) => {
-    if (!identityKey || !amount || currentDelegationListActionItem?.id !== identityKey) {
+    if (!identityKey || !amount || currentDelegationListActionItem?.node_identity !== identityKey || !clientDetails) {
       setConfirmationModalProps({
         status: 'error',
         action: 'delegate',
@@ -114,7 +116,7 @@ export const Delegation: FC = () => {
     try {
       const tx = await updateDelegation({
         ...currentDelegationListActionItem,
-        amount,
+        amount: { amount, denom: clientDetails.denom },
       });
       setConfirmationModalProps({
         status: 'success',
@@ -269,7 +271,7 @@ export const Delegation: FC = () => {
           onOk={handleDelegateMore}
           header="Delegate more"
           buttonText="Delegate more"
-          identityKey={currentDelegationListActionItem.id}
+          identityKey={currentDelegationListActionItem.node_identity}
           currency="NYM"
           fee={0.004375}
           estimatedMonthlyReward={50.123}
@@ -288,7 +290,7 @@ export const Delegation: FC = () => {
           currency="NYM"
           fee={0.004375}
           amount={150}
-          identityKey={currentDelegationListActionItem.id}
+          identityKey={currentDelegationListActionItem.node_identity}
         />
       )}
 
@@ -299,7 +301,7 @@ export const Delegation: FC = () => {
           onOk={handleRedeem}
           message="Redeem rewards"
           currency="NYM"
-          identityKey={currentDelegationListActionItem.id}
+          identityKey={currentDelegationListActionItem.node_identity}
           fee={0.004375}
           amount={425.65843}
         />

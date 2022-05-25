@@ -8,7 +8,7 @@ export const MockRewardsContextProvider: FC = ({ children }) => {
   const [error, setError] = useState<string>();
   const [totalRewards, setTotalRewards] = useState<undefined | string>();
   const { delegations, updateDelegation } = useDelegationContext();
-  const delegationsHash = delegations?.map((d) => d.reward).join(',');
+  const delegationsHash = delegations?.map((d) => d.accumulated_rewards).join(',');
 
   const resetState = () => {
     setIsLoading(true);
@@ -18,7 +18,7 @@ export const MockRewardsContextProvider: FC = ({ children }) => {
 
   const recalculate = () => {
     const sum: number | undefined = delegations
-      ?.map((d) => (d.reward ? Number(10) : Number(0)))
+      ?.map((d) => (d.accumulated_rewards ? Number(10) : Number(0)))
       .reduce((acc, cur) => acc + cur, Number(0));
 
     setTotalRewards(sum ? `${sum} NYM` : undefined);
@@ -47,7 +47,7 @@ export const MockRewardsContextProvider: FC = ({ children }) => {
       throw new Error('No delegations');
     }
 
-    const d = delegations.find((d1) => d1.id === mixnodeAddress);
+    const d = delegations.find((d1) => d1.node_identity === mixnodeAddress);
 
     if (!d) {
       throw new Error(`Unable to find delegation for id = ${mixnodeAddress}`);
