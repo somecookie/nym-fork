@@ -34,6 +34,7 @@ use nymsphinx::params::PacketMode;
 use rand::{rngs::OsRng, CryptoRng, Rng};
 use std::sync::Arc;
 use std::time::Duration;
+use futures::lock::Mutex;
 use tokio::runtime::Handle;
 use tokio::task::JoinHandle;
 
@@ -171,7 +172,7 @@ impl RealMessagesController<OsRng> {
         }
     }
 
-    pub(super) async fn run(&mut self, vpn_mode: bool) {
+    pub(super) async fn run(&mut self, vpn_mode: bool, counter: Arc<Mutex<i32>>) {
         let mut out_queue_control = self.out_queue_control.take().unwrap();
         let mut ack_control = self.ack_control.take().unwrap();
 
@@ -179,7 +180,7 @@ impl RealMessagesController<OsRng> {
         // the task to ever finish. This will of course change once we introduce
         // graceful shutdowns.
         let out_queue_control_fut = tokio::spawn(async move {
-            out_queue_control.run_out_queue_control(vpn_mode).await;
+            out_queue_control.run_out_queue_control(vpn_mode, counter).await;
             error!("The out queue controller has finished execution!");
             out_queue_control
         });
@@ -198,9 +199,9 @@ impl RealMessagesController<OsRng> {
 
     // &Handle is only passed for consistency sake with other client modules, but I think
     // when we get to refactoring, we should apply gateway approach and make it implicit
-    pub fn start(mut self, handle: &Handle, vpn_mode: bool) -> JoinHandle<Self> {
+    pub fn start(mut self, handle: &Handle, vpn_mode: bool, counter: Arc<Mutex<i32>>) -> JoinHandle<Self> {
         handle.spawn(async move {
-            self.run(vpn_mode).await;
+            self.run(vpn_mode, counter).await;
             self
         })
     }

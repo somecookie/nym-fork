@@ -30,6 +30,7 @@ use std::collections::VecDeque;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::time::Duration;
+use futures::lock::Mutex;
 use tokio::time;
 
 /// Configurable parameters of the `OutQueueControl`
@@ -205,7 +206,7 @@ where
         self.sent_notifier.unbounded_send(frag_id).unwrap();
     }
 
-    async fn on_message(&mut self, next_message: StreamMessage) {
+    async fn on_message(&mut self, next_message: StreamMessage, count: i32) {
         trace!("created new message");
 
         let next_message = match next_message {
@@ -226,6 +227,12 @@ where
                     return;
                 }
                 let topology_ref = topology_ref_option.unwrap();
+
+                if count >= 0{
+                    println!("More outgoing traffic: loop mode");
+                }else{
+                    println!("More incoming traffic: drop mode")
+                }
 
                 generate_loop_cover_packet(
                     &mut self.rng,
@@ -267,7 +274,7 @@ where
     }
 
     // Send messages at certain rate and if no real traffic is available, send cover message.
-    async fn run_normal_out_queue(&mut self) {
+    async fn run_normal_out_queue(&mut self, counter: Arc<Mutex<i32>>) {
         // we should set initial delay only when we actually start the stream
         self.next_delay = time::delay_for(sample_poisson_duration(
             &mut self.rng,
@@ -275,7 +282,8 @@ where
         ));
 
         while let Some(next_message) = self.next().await {
-            self.on_message(next_message).await;
+            let num = counter.lock().await;
+            self.on_message(next_message, *num).await;
         }
     }
 
@@ -286,13 +294,13 @@ where
         }
     }
 
-    pub(crate) async fn run_out_queue_control(&mut self, vpn_mode: bool) {
+    pub(crate) async fn run_out_queue_control(&mut self, vpn_mode: bool, counter: Arc<Mutex<i32>>) {
         if vpn_mode {
             debug!("Starting out queue controller in vpn mode...");
             self.run_vpn_out_queue().await
         } else {
             debug!("Starting out queue controller...");
-            self.run_normal_out_queue().await
+            self.run_normal_out_queue(counter).await
         }
     }
 }

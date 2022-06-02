@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::convert::TryFrom;
+use std::sync::Arc;
 use futures::channel::mpsc;
+use futures::lock::Mutex;
 use futures::StreamExt;
 use gateway_client::GatewayClient;
 use log::*;
@@ -77,15 +80,21 @@ impl MixTrafficController {
         }
     }
 
-    pub async fn run(&mut self) {
+    pub async fn run(&mut self, counter: Arc<Mutex<i32>>) {
         while let Some(mix_packets) = self.mix_rx.next().await {
+            let mut num = counter.lock().await;
+
+            match i32::try_from(mix_packets.len()){
+                Ok(c) => *num += c,
+                Err(_) => {}
+            }
             self.on_messages(mix_packets).await;
         }
     }
 
-    pub fn start(mut self, handle: &Handle) -> JoinHandle<()> {
+    pub fn start(mut self, handle: &Handle, counter: Arc<Mutex<i32>>) -> JoinHandle<()> {
         handle.spawn(async move {
-            self.run().await;
+            self.run(counter).await;
         })
     }
 }

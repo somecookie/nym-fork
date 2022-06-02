@@ -25,6 +25,7 @@ use nymsphinx::anonymous_replies::{encryption_key::EncryptionKeyDigest, SURBEncr
 use nymsphinx::params::{ReplySURBEncryptionAlgorithm, ReplySURBKeyDigestAlgorithm};
 use nymsphinx::receiver::{MessageReceiver, MessageRecoveryError, ReconstructedMessage};
 use std::collections::HashSet;
+use std::convert::TryFrom;
 use std::sync::Arc;
 use tokio::runtime::Handle;
 use tokio::task::JoinHandle;
@@ -333,9 +334,15 @@ impl FragmentedMessageReceiver {
             mixnet_packet_receiver,
         }
     }
-    fn start(mut self, handle: &Handle) -> JoinHandle<()> {
+    fn start(mut self, handle: &Handle, counter: Arc<Mutex<i32>>) -> JoinHandle<()> {
         handle.spawn(async move {
             while let Some(new_messages) = self.mixnet_packet_receiver.next().await {
+                let mut num = counter.lock().await;
+
+                match i32::try_from(new_messages.len()){
+                    Ok(c) => *num -= c,
+                    Err(_) => {}
+                }
                 self.received_buffer.handle_new_received(new_messages).await;
             }
         })
@@ -366,9 +373,9 @@ impl ReceivedMessagesBufferController {
         }
     }
 
-    pub fn start(self, handle: &Handle) {
+    pub fn start(self, handle: &Handle, counter: Arc<Mutex<i32>>) {
         // TODO: should we do anything with JoinHandle(s) returned by start methods?
-        self.fragmented_message_receiver.start(handle);
+        self.fragmented_message_receiver.start(handle, counter);
         self.request_receiver.start(handle);
     }
 }
