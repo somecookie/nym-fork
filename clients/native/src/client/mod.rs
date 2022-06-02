@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::sync::Arc;
 use crate::client::config::{Config, SocketType};
 use crate::websocket;
 use client_core::client::cover_traffic_stream::LoopCoverTrafficStream;
@@ -35,6 +36,7 @@ use client_core::client::topology_control::{
 use client_core::config::persistence::key_pathfinder::ClientKeyPathfinder;
 use crypto::asymmetric::identity;
 use futures::channel::mpsc;
+use futures::lock::Mutex;
 use gateway_client::{
     AcknowledgementReceiver, AcknowledgementSender, GatewayClient, MixnetMessageReceiver,
     MixnetMessageSender,
@@ -130,6 +132,7 @@ impl NymClient {
         ack_receiver: AcknowledgementReceiver,
         input_receiver: InputMessageReceiver,
         mix_sender: BatchMixMessageSender,
+        counter: Arc<Mutex<i32>>,
     ) {
         let packet_mode = if self.config.get_base().get_vpn_mode() {
             PacketMode::VPN
@@ -164,7 +167,7 @@ impl NymClient {
             )
         });
         real_messages_controller
-            .start(self.runtime.handle(), self.config.get_base().get_vpn_mode());
+            .start(self.runtime.handle(), self.config.get_base().get_vpn_mode(), counter);
     }
 
     // buffer controlling all messages fetched from provider
@@ -174,6 +177,7 @@ impl NymClient {
         query_receiver: ReceivedBufferRequestReceiver,
         mixnet_receiver: MixnetMessageReceiver,
         reply_key_storage: ReplyKeyStorage,
+        counter: Arc<Mutex<i32>>,
     ) {
         info!("Starting received messages buffer controller...");
         ReceivedMessagesBufferController::new(
@@ -182,7 +186,7 @@ impl NymClient {
             mixnet_receiver,
             reply_key_storage,
         )
-        .start(self.runtime.handle())
+        .start(self.runtime.handle(), counter)
     }
 
     fn start_gateway_client(
@@ -262,9 +266,10 @@ impl NymClient {
         &mut self,
         mix_rx: BatchMixMessageReceiver,
         gateway_client: GatewayClient,
+        counter: Arc<Mutex<i32>>,
     ) {
         info!("Starting mix traffic controller...");
-        MixTrafficController::new(mix_rx, gateway_client).start(self.runtime.handle());
+        MixTrafficController::new(mix_rx, gateway_client).start(self.runtime.handle(), counter);
     }
 
     fn start_websocket_listener(
@@ -369,6 +374,10 @@ impl NymClient {
             ReplyKeyStorage::load(self.config.get_base().get_reply_encryption_key_store_path())
                 .expect("Failed to load reply key storage!");
 
+        // Counter protected by a mutex that can be access by different threads to count the difference
+        // between the number of outgoing and ingoing packets.
+        let counter = Arc::new(Mutex::new(0));
+
         // the components are started in very specific order. Unless you know what you are doing,
         // do not change that.
         self.start_topology_refresher(shared_topology_accessor.clone());
@@ -376,17 +385,19 @@ impl NymClient {
             received_buffer_request_receiver,
             mixnet_messages_receiver,
             reply_key_storage.clone(),
+            Arc::clone(&counter),
         );
 
         let gateway_client = self.start_gateway_client(mixnet_messages_sender, ack_sender);
 
-        self.start_mix_traffic_controller(sphinx_message_receiver, gateway_client);
+        self.start_mix_traffic_controller(sphinx_message_receiver, gateway_client, Arc::clone(&counter));
         self.start_real_traffic_controller(
             shared_topology_accessor.clone(),
             reply_key_storage,
             ack_receiver,
             input_receiver,
             sphinx_message_sender.clone(),
+            counter,
         );
 
         if !self.config.get_base().get_vpn_mode() {
