@@ -19,7 +19,7 @@ use futures::{Future, Stream, StreamExt};
 use log::*;
 use nymsphinx::acknowledgements::AckKey;
 use nymsphinx::addressing::clients::Recipient;
-use nymsphinx::cover::generate_loop_cover_packet;
+use nymsphinx::cover::generate_cover_packet;
 use nymsphinx::utils::sample_poisson_duration;
 use rand::{rngs::OsRng, CryptoRng, Rng};
 use std::pin::Pin;
@@ -138,13 +138,14 @@ impl LoopCoverTrafficStream<OsRng> {
         }
         let topology_ref = topology_ref_option.unwrap();
 
-        let cover_message = generate_loop_cover_packet(
+        let cover_message = generate_cover_packet(
             &mut self.rng,
             topology_ref,
             &*self.ack_key,
             &self.our_full_destination,
             self.average_ack_delay,
             self.average_packet_delay,
+            false,
         )
         .expect("Somehow failed to generate a loop cover message with a valid topology");
 
