@@ -12,26 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::client::mix_traffic::BatchMixMessageSender;
-use crate::client::real_messages_control::acknowledgement_control::SentPacketNotificationSender;
-use crate::client::topology_control::TopologyAccessor;
-use futures::channel::mpsc;
-use futures::task::{Context, Poll};
-use futures::{Future, Stream, StreamExt};
-use log::*;
-use nymsphinx::acknowledgements::AckKey;
-use nymsphinx::addressing::clients::Recipient;
-use nymsphinx::chunking::fragment::FragmentIdentifier;
-use nymsphinx::cover::generate_loop_cover_packet;
-use nymsphinx::forwarding::packet::MixPacket;
-use nymsphinx::utils::sample_poisson_duration;
-use rand::{CryptoRng, Rng};
 use std::collections::VecDeque;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::time::Duration;
+
+use futures::{Future, Stream, StreamExt};
+use futures::channel::mpsc;
 use futures::lock::Mutex;
+use futures::task::{Context, Poll};
+use log::*;
+use rand::{CryptoRng, Rng};
 use tokio::time;
+
+use nymsphinx::acknowledgements::AckKey;
+use nymsphinx::addressing::clients::Recipient;
+use nymsphinx::chunking::fragment::FragmentIdentifier;
+use nymsphinx::cover::{generate_drop_cover_packet, generate_loop_cover_packet};
+use nymsphinx::forwarding::packet::MixPacket;
+use nymsphinx::utils::sample_poisson_duration;
+
+use crate::client::mix_traffic::BatchMixMessageSender;
+use crate::client::real_messages_control::acknowledgement_control::SentPacketNotificationSender;
+use crate::client::topology_control::TopologyAccessor;
 
 /// Configurable parameters of the `OutQueueControl`
 pub(crate) struct Config {
@@ -60,8 +63,8 @@ impl Config {
 }
 
 pub(crate) struct OutQueueControl<R>
-where
-    R: CryptoRng + Rng,
+    where
+        R: CryptoRng + Rng,
 {
     /// Configurable parameters of the `ActionController`
     config: Config,
@@ -122,8 +125,8 @@ pub(crate) enum StreamMessage {
 }
 
 impl<R> Stream for OutQueueControl<R>
-where
-    R: CryptoRng + Rng + Unpin,
+    where
+        R: CryptoRng + Rng + Unpin,
 {
     type Item = StreamMessage;
 
@@ -171,8 +174,8 @@ where
 }
 
 impl<R> OutQueueControl<R>
-where
-    R: CryptoRng + Rng + Unpin,
+    where
+        R: CryptoRng + Rng + Unpin,
 {
     pub(crate) fn new(
         config: Config,
@@ -228,21 +231,25 @@ where
                 }
                 let topology_ref = topology_ref_option.unwrap();
 
-                if count >= 0{
-                    println!("More outgoing traffic: loop mode");
-                }else{
-                    println!("More incoming traffic: drop mode")
+                if count >= 0 {
+                    generate_loop_cover_packet(
+                        &mut self.rng,
+                        topology_ref,
+                        &*self.ack_key,
+                        &self.our_full_destination,
+                        self.config.average_ack_delay,
+                        self.config.average_packet_delay,
+                    )
+                        .expect("Somehow failed to generate a loop cover message with a valid topology")
+                } else {
+                    generate_drop_cover_packet(
+                        &mut self.rng,
+                        topology_ref,
+                        &self.our_full_destination,
+                        self.config.average_packet_delay,
+                    )
+                        .expect("Somehow failed to generate a drop cover message with a valid topology")
                 }
-
-                generate_loop_cover_packet(
-                    &mut self.rng,
-                    topology_ref,
-                    &*self.ack_key,
-                    &self.our_full_destination,
-                    self.config.average_ack_delay,
-                    self.config.average_packet_delay,
-                )
-                .expect("Somehow failed to generate a loop cover message with a valid topology")
             }
             StreamMessage::Real(real_message) => {
                 self.sent_notify(real_message.fragment_id);

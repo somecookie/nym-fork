@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::filter::VersionFilterable;
+use std::collections::HashMap;
+
+use rand::Rng;
+
 use nymsphinx_addressing::nodes::NodeIdentity;
 use nymsphinx_types::Node as SphinxNode;
-use rand::Rng;
-use std::collections::HashMap;
+
+use crate::filter::VersionFilterable;
 
 mod filter;
 pub mod gateway;
@@ -82,9 +85,9 @@ impl NymTopology {
         rng: &mut R,
         num_mix_hops: u8,
     ) -> Result<Vec<SphinxNode>, NymTopologyError>
-    where
+        where
         // I don't think there's a need for this RNG to be crypto-secure
-        R: Rng + ?Sized,
+            R: Rng + ?Sized,
     {
         use rand::seq::SliceRandom;
 
@@ -118,17 +121,23 @@ impl NymTopology {
         rng: &mut R,
         num_mix_hops: u8,
         gateway_identity: &NodeIdentity,
+        without_gateway: bool,
     ) -> Result<Vec<SphinxNode>, NymTopologyError>
-    where
+        where
         // I don't think there's a need for this RNG to be crypto-secure
-        R: Rng + ?Sized,
+            R: Rng + ?Sized,
     {
         let gateway = self
             .get_gateway(gateway_identity)
             .ok_or_else(|| NymTopologyError::NonExistentGatewayError)?;
+        if without_gateway {
+            return Ok(self
+                .random_mix_route(rng, num_mix_hops)?
+                .into_iter()
+                .collect());
+        }
 
-        Ok(self
-            .random_mix_route(rng, num_mix_hops)?
+        Ok(self.random_mix_route(rng, num_mix_hops)?
             .into_iter()
             .chain(std::iter::once(gateway.into()))
             .collect())
@@ -197,11 +206,11 @@ mod converting_mixes_to_vec {
                 identity_key: identity::PublicKey::from_base58_string(
                     "3ebjp1Fb9hdcS1AR6AZihgeJiMHkB5jjJUsvqNnfQwU7",
                 )
-                .unwrap(),
+                    .unwrap(),
                 sphinx_key: encryption::PublicKey::from_base58_string(
                     "C7cown6dYCLZpLiMFC1PaBmhvLvmJmLDJGeRTbPD45bX",
                 )
-                .unwrap(),
+                    .unwrap(),
                 layer: 1,
                 registration_time: 123,
                 reputation: 0,

@@ -296,6 +296,7 @@ where
             &mut self.rng,
             self.num_mix_hops,
             &packet_recipient.gateway(),
+            false,
         )?;
         let destination = packet_recipient.as_sphinx_destination();
 
