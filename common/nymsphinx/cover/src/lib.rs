@@ -14,7 +14,6 @@
 
 use std::convert::TryFrom;
 use std::time;
-use std::time::Duration;
 
 use rand::{CryptoRng, RngCore};
 
