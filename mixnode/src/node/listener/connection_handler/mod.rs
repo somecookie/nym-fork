@@ -79,8 +79,10 @@ impl ConnectionHandler {
                 MixProcessingResult::ForwardHop(forward_packet, delay) => {
                     self.delay_and_forward_packet(forward_packet, delay)
                 }
-                MixProcessingResult::FinalHop(..) => {
-                    warn!("Somehow processed a loop cover message that we haven't implemented yet!")
+                MixProcessingResult::FinalHop(processed) => {
+                    if !nymsphinx::cover::is_cover(&processed.message){
+                        warn!("Somehow processed a (non-cover) message that we haven't implemented yet!")
+                    }
                 }
             },
         }

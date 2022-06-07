@@ -36,6 +36,10 @@ use crate::client::mix_traffic::BatchMixMessageSender;
 use crate::client::real_messages_control::acknowledgement_control::SentPacketNotificationSender;
 use crate::client::topology_control::TopologyAccessor;
 
+/// COUNTER_THRESHOLD is the limit at which the counter is zeroed-out.
+/// This is used to avoid an infinite growing counter.
+const COUNTER_THRESHOLD: i32 = 100;
+
 /// Configurable parameters of the `OutQueueControl`
 pub(crate) struct Config {
     /// Average delay an acknowledgement packet is going to get delay at a single mixnode.
@@ -279,7 +283,12 @@ impl<R> OutQueueControl<R>
         ));
 
         while let Some(next_message) = self.next().await {
-            let num = counter.lock().await;
+            let mut num = counter.lock().await;
+
+            if *num > COUNTER_THRESHOLD{
+                *num = 0;
+            }
+
             self.on_message(next_message, *num).await;
         }
     }
