@@ -38,7 +38,7 @@ use crate::client::topology_control::TopologyAccessor;
 
 /// COUNTER_THRESHOLD is the limit at which the counter is zeroed-out.
 /// This is used to avoid an infinite growing counter.
-const COUNTER_THRESHOLD: i32 = 100;
+const COUNTER_THRESHOLD: i32 = 50;
 
 /// Configurable parameters of the `OutQueueControl`
 pub(crate) struct Config {
